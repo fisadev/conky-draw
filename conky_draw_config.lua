@@ -1,5 +1,5 @@
--- Default values for graphs when no provided.
--- Change them if you want, byt DON'T remove them! 
+-- Default values for graphs when not provided.
+-- Change them if you want, but DON'T remove them!
 defaults = {
     max_value = 100.,
     critical_threshold = 90.,
