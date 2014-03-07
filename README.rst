@@ -117,20 +117,11 @@ Now, the elements and properties
 
 **line**: a simple straight line from point A to point B.
 
-:from (required):
-    A point where the line should start.
-
-:to (required):
-    A point where the line should end.
-
-:color:
-    Color of the line.
-
-:alpha:
-    Transpacency level of the line.
-
-:thickness:
-    Thickness of the line.
+:from (required): A point where the line should start.
+:to (required): A point where the line should end.
+:color: Color of the line.
+:alpha: Transpacency level of the line.
+:thickness: Thickness of the line.
 
 **bar_graph**: a bar graph, able to display a value from conky, and optionaly able to change appearance when the value hits a "critical" threshold.
 
