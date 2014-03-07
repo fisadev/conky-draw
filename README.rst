@@ -115,8 +115,11 @@ But first, some general notions on the values of properties.
 Now, the elements and properties
 --------------------------------
 
-**line**: a simple straight line from point A to point B.
+line: 
+-----
 
++--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+| A simple straight line from point A to point B.                                                                                                                         |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 | from (required)                | A point where the line should start.                                                                                                   |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
@@ -129,8 +132,12 @@ Now, the elements and properties
 | thickness                      | Thickness of the line.                                                                                                                 |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 
-**bar_graph**: a bar graph, able to display a value from conky, and optionaly able to change appearance when the value hits a "critical" threshold.
+bar_graph:
+----------
 
++--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+| A bar graph, able to display a value from conky, and optionaly able to change appearance when the value hits a "critical" threshold.                                    |
+| It's composed of two lines (rectangles), one for the background, and the other to represent the current value of the conky stat.                                        |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 | from (required)                | A point where the bar graph should start.                                                                                              |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
@@ -157,8 +164,11 @@ Now, the elements and properties
 | bar_thickness_critical         |                                                                                                                                        |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 
-**ring**: a simple ring (can be a section of the ring too).
+ring:
+-----
 
++--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+| A simple ring (can be a section of the ring too).                                                                                                                       |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 | center (required)              | The center point of the ring.                                                                                                          |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
@@ -180,8 +190,12 @@ Now, the elements and properties
 | * ``start_angle=180, end_angle=90``                                                                                                                                     |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 
-**ring_graph**: a ring graph (can be a section of the ring too) able to display a value from conky, and optionaly able to change appearance when the value hits a "critical" threshold.
+ring_graph:
+-----------
 
++--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+| A ring graph (can be a section of the ring too) able to display a value from conky, and optionaly able to change appearance when the value hits a "critical" threshold. |
+| It's composed of two rings, one for the background, and the other to represent the current value of the conky stat.                                                     |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 | center (required)              | The center point of the ring.                                                                                                          |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
@@ -217,8 +231,17 @@ Now, the elements and properties
 | * ``start_angle=180, end_angle=90``                                                                                                                                     |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 
-**static_text**: not yet implemented.
+static_text: 
+------------
 
-**variable_text**: not yet implemented.
+Not yet implemented.
 
-**clock**: not yet implemented.
+variable_text: 
+--------------
+
+Not yet implemented.
+
+clock: 
+------
+
+Not yet implemented.
