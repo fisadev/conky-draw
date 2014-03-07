@@ -98,7 +98,7 @@ But first, some general notions on the values of properties.
 |                        | Example: ``start_angle = 90``                                                                                                                      |
 +------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
 | thickness              | Its value should be the thickness in pixels.                                                                                                       |
-|                        | Example: ``thickness = 5``                                                                                                                          |
+|                        | Example: ``thickness = 5``                                                                                                                         |
 +------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
 | conky value            | Its value should be a string of a conky value to use.                                                                                              |
 |                        | Example: ``conky_value = 'upspeedf eth0'``                                                                                                         |
@@ -109,7 +109,7 @@ But first, some general notions on the values of properties.
 +------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
 | critical threshold     | It should be the value at which the graph should change appearance. If you don't want that, just leave it equal to max_value to disable appearance |
 |                        | changes.                                                                                                                                           |
-|                        | Example: ``critical_threshold = 90``                                                                                                                |
+|                        | Example: ``critical_threshold = 90``                                                                                                               |
 +------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
 
 Now, the elements and properties
