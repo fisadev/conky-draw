@@ -166,7 +166,17 @@ function draw_static_text(display, element)
 end
 
 
--- Default values for visual elements when not provided.
+-- properties that the user *must* define, because they don't have default
+-- values
+requirements = {
+    line = {'from', 'to'},
+    bar_graph = {'from', 'to', 'conky_value'},
+    ring = {'center', 'radius'},
+    ring_graph = {'center', 'radius', 'conky_value'},
+}
+
+
+-- Default values for properties that can have a default value
 defaults = {
     bar_graph = {
         max_value = 100.,
@@ -245,6 +255,30 @@ defaults = {
 }
 
 
+function check_requirements(elements)
+    -- check every element has the required properties
+    for i, element in pairs(elements) do
+        -- find the requirements for that element kind
+        kind_requirements = requirements[element.kind]
+        -- if there are defined requirements for that element kind
+        if  kind_requirements ~= nil then
+            -- check all of them are defined by the user
+            for i, property in pairs(kind_requirements) do
+                if element[property] == nil then
+                    error('You defined a ' .. element.kind .. ' without specifying its "' .. property .. '" value')
+                end
+            end
+        else
+            -- we don't know which properties has to have, BUT, it always needs
+            -- a draw_function
+            if element.draw_function == nil then
+                error('You defined a ' .. element.kind .. ', which is unknown element kind to me. Was it a typo? or are you trying to define a custom element kind but forgot to define its draw_function?')
+            end
+        end
+    end
+end
+
+
 function fill_defaults(elements)
     -- fill each each element with the missing values, using the defaults
     for i, element in pairs(elements) do
@@ -269,6 +303,7 @@ function conky_main()
         return
     end
 
+    check_requirements(elements)
     fill_defaults(elements)
 
     local surface = cairo_xlib_surface_create(conky_window.display, 
@@ -280,11 +315,7 @@ function conky_main()
 
     if tonumber(conky_parse('${updates}')) > 3 then
         for i, element in pairs(elements) do
-            if element.draw_function == nil then
-                error("Unknown element kind, can't draw it: " .. element.kind)
-            else
-                element.draw_function(display, element)
-            end
+            element.draw_function(display, element)
         end
     end
 
