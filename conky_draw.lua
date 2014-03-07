@@ -73,22 +73,22 @@ function draw_bar_graph(display, element)
         thickness = element['background_thickness' .. critical_or_not_suffix],
     }
 
-    -- foreground line (bar)
-    foreground_line = {
+    -- bar line (bar)
+    bar_line = {
         x1 = element.x1,
         x2 = element.x1 + bar_x_side,
 
         y1 = element.y1,
         y2 = element.y1 + bar_y_side,
 
-        color = element['foreground_color' .. critical_or_not_suffix],
-        alpha = element['foreground_alpha' .. critical_or_not_suffix],
-        thickness = element['foreground_thickness' .. critical_or_not_suffix],
+        color = element['bar_color' .. critical_or_not_suffix],
+        alpha = element['bar_alpha' .. critical_or_not_suffix],
+        thickness = element['bar_thickness' .. critical_or_not_suffix],
     }
 
     -- draw both lines
     draw_line(display, background_line)
-    draw_line(display, foreground_line)
+    draw_line(display, bar_line)
 end
 
 
@@ -144,8 +144,8 @@ function draw_ring_graph(display, element)
         thickness = element['background_thickness' .. critical_or_not_suffix],
     }
 
-    -- foreground ring (bar)
-    foreground_ring = {
+    -- bar ring (bar)
+    bar_ring = {
         x = element.x,
         y = element.y,
         radius = element.radius,
@@ -153,14 +153,14 @@ function draw_ring_graph(display, element)
         start_angle = element.start_angle,
         end_angle = element.end_angle + bar_degrees,
 
-        color = element['foreground_color' .. critical_or_not_suffix],
-        alpha = element['foreground_alpha' .. critical_or_not_suffix],
-        thickness = element['foreground_thickness' .. critical_or_not_suffix],
+        color = element['bar_color' .. critical_or_not_suffix],
+        alpha = element['bar_alpha' .. critical_or_not_suffix],
+        thickness = element['bar_thickness' .. critical_or_not_suffix],
     }
 
     -- draw both rings
     draw_ring(display, background_ring)
-    draw_ring(display, foreground_ring)
+    draw_ring(display, bar_ring)
 end
 
 
@@ -180,19 +180,21 @@ defaults = {
         max_value = 100.,
         critical_threshold = 90.,
 
-        background = 0x00FF6E,
-        foreground = 0x00FF6E,
+        background_color = 0x00FF6E,
         background_alpha = 0.2,
-        foreground_alpha = 1.0,
         background_thickness = 5,
-        foreground_thickness = 5,
 
-        background_critical = 0xFA002E,
-        foreground_critical = 0xFA002E,
+        bar_color = 0x00FF6E,
+        bar_alpha = 1.0,
+        bar_thickness = 5,
+
+        background_color_critical = 0xFA002E,
         background_alpha_critical = 0.2,
-        foreground_alpha_critical = 1.0,
         background_thickness_critical = 5,
-        foreground_thickness_critical = 5,
+
+        bar_color_critical = 0xFA002E,
+        bar_alpha_critical = 1.0,
+        bar_thickness_critical = 5,
 
         draw_function = draw_bar_graph,
     },
@@ -200,19 +202,21 @@ defaults = {
         max_value = 100.,
         critical_threshold = 90.,
 
-        background = 0x00FF6E,
-        foreground = 0x00FF6E,
+        background_color = 0x00FF6E,
         background_alpha = 0.2,
-        foreground_alpha = 1.0,
         background_thickness = 5,
-        foreground_thickness = 5,
 
-        background_critical = 0xFA002E,
-        foreground_critical = 0xFA002E,
+        bar_color = 0x00FF6E,
+        bar_alpha = 1.0,
+        bar_thickness = 5,
+
+        background_color_critical = 0xFA002E,
         background_alpha_critical = 0.2,
-        foreground_alpha_critical = 1.0,
         background_thickness_critical = 5,
-        foreground_thickness_critical = 5,
+
+        bar_color_critical = 0xFA002E,
+        bar_alpha_critical = 1.0,
+        bar_thickness_critical = 5,
 
         start_angle = 0, 
         end_angle = 360,
