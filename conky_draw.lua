@@ -68,9 +68,9 @@ function draw_bar_graph(display, element)
         x2 = element.x2,
         y2 = element.y2,
 
-        color = element['background_color' + critical_or_not_suffix],
-        alpha = element['background_alpha' + critical_or_not_suffix],
-        thickness = element['background_thickness' + critical_or_not_suffix],
+        color = element['background_color' .. critical_or_not_suffix],
+        alpha = element['background_alpha' .. critical_or_not_suffix],
+        thickness = element['background_thickness' .. critical_or_not_suffix],
     }
 
     -- foreground line (bar)
@@ -81,9 +81,9 @@ function draw_bar_graph(display, element)
         y1 = element.y1,
         y2 = element.y1 + bar_y_side,
 
-        color = element['foreground_color' + critical_or_not_suffix],
-        alpha = element['foreground_alpha' + critical_or_not_suffix],
-        thickness = element['foreground_thickness' + critical_or_not_suffix],
+        color = element['foreground_color' .. critical_or_not_suffix],
+        alpha = element['foreground_alpha' .. critical_or_not_suffix],
+        thickness = element['foreground_thickness' .. critical_or_not_suffix],
     }
 
     -- draw both lines
@@ -139,9 +139,9 @@ function draw_ring_graph(display, element)
         start_angle = element.start_angle,
         end_angle = element.end_angle,
 
-        color = element['background_color' + critical_or_not_suffix],
-        alpha = element['background_alpha' + critical_or_not_suffix],
-        thickness = element['background_thickness' + critical_or_not_suffix],
+        color = element['background_color' .. critical_or_not_suffix],
+        alpha = element['background_alpha' .. critical_or_not_suffix],
+        thickness = element['background_thickness' .. critical_or_not_suffix],
     }
 
     -- foreground ring (bar)
@@ -153,9 +153,9 @@ function draw_ring_graph(display, element)
         start_angle = element.start_angle,
         end_angle = element.end_angle + bar_degrees,
 
-        color = element['foreground_color' + critical_or_not_suffix],
-        alpha = element['foreground_alpha' + critical_or_not_suffix],
-        thickness = element['foreground_thickness' + critical_or_not_suffix],
+        color = element['foreground_color' .. critical_or_not_suffix],
+        alpha = element['foreground_alpha' .. critical_or_not_suffix],
+        thickness = element['foreground_thickness' .. critical_or_not_suffix],
     }
 
     -- draw both rings
@@ -283,7 +283,7 @@ function conky_main()
     if tonumber(conky_parse('${updates}')) > 3 then
         for i, element in pairs(elements) do
             if element.draw_function == nil then
-                error("Unknown element kind, can't draw it: " + element.kind)
+                error("Unknown element kind, can't draw it: " .. element.kind)
             else
                 element.draw_function(display, element)
             end
