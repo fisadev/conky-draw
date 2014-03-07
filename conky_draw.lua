@@ -24,13 +24,13 @@ function draw_line(display, element)
     -- draw a line
 
     -- deltas for x and y (cairo expects a point and deltas for both axis)
-    local x_side = element.x2 - element.x1 -- not abs! because they are deltas
-    local y_side = element.y2 - element.y1 -- and the same here
+    local x_side = element.to.x - element.from.x -- not abs! because they are deltas
+    local y_side = element.to.y - element.from.y -- and the same here
 
     -- draw line
     cairo_set_source_rgba(display, hexa_to_rgb(element.color, element.alpha))
     cairo_set_line_width(display, element.thickness);
-    cairo_move_to(display, element.x1, element.y1);
+    cairo_move_to(display, element.from.x, element.from.y);
     cairo_rel_line_to(display, x_side, y_side);
     cairo_stroke(display);
 end
@@ -44,8 +44,8 @@ function draw_bar_graph(display, element)
     local value = get_conky_value(element.conky_value, true)
     
     -- dimensions of the full graph
-    local x_side = element.x2 - element.x1
-    local y_side = element.y2 - element.y1
+    local x_side = element.to.x - element.from.x
+    local y_side = element.to.y - element.from.y
     local hypotenuse = math.sqrt(math.pow(x_side, 2) + math.pow(y_side, 2))
     local angle = math.atan2(y_side, x_side)
 
@@ -62,11 +62,8 @@ function draw_bar_graph(display, element)
 
     -- background line (full graph)
     background_line = {
-        x1 = element.x1,
-        y1 = element.y1,
-
-        x2 = element.x2,
-        y2 = element.y2,
+        from = element.from,
+        to = element.to,
 
         color = element['background_color' .. critical_or_not_suffix],
         alpha = element['background_alpha' .. critical_or_not_suffix],
@@ -75,11 +72,8 @@ function draw_bar_graph(display, element)
 
     -- bar line (bar)
     bar_line = {
-        x1 = element.x1,
-        x2 = element.x1 + bar_x_side,
-
-        y1 = element.y1,
-        y2 = element.y1 + bar_y_side,
+        from = element.from,
+        to = {x=element.from.x + bar_x_side, y=element.from.y + bar_y_side},
 
         color = element['bar_color' .. critical_or_not_suffix],
         alpha = element['bar_alpha' .. critical_or_not_suffix],
@@ -107,7 +101,7 @@ function draw_ring(display, element)
     -- draw the ring
     cairo_set_source_rgba(display, hexa_to_rgb(element.color, element.alpha))
     cairo_set_line_width(display, element.thickness);
-    arc_drawer(display, element.x, element.y, element.radius, start_angle, end_angle)
+    arc_drawer(display, element.center.x, element.center.y, element.radius, start_angle, end_angle)
     cairo_stroke(display);
 end
 
@@ -132,8 +126,7 @@ function draw_ring_graph(display, element)
 
     -- background ring (full graph)
     background_ring = {
-        x = element.x,
-        y = element.y,
+        center = element.center,
         radius = element.radius,
 
         start_angle = element.start_angle,
@@ -146,8 +139,7 @@ function draw_ring_graph(display, element)
 
     -- bar ring (bar)
     bar_ring = {
-        x = element.x,
-        y = element.y,
+        center = element.center,
         radius = element.radius,
 
         start_angle = element.start_angle,
