@@ -252,13 +252,15 @@ defaults = {
 function fill_defaults(elements)
     -- fill each each element with the missing values, using the defaults
     for i, element in pairs(elements) do
+        -- find the defaults for that element kind
+        kind_defaults = defaults[element.kind]
         -- only if there are defined defaults for that element kind
-        if defaults[element.kind] ~= nil then
+        if  kind_defaults ~= nil then
             -- fill the element with the defaults (for the properties without
             -- value)
-            for key, value in pairs(defaults[element.kind]) do
+            for key, value in pairs(kind_defaults) do
                 if element[key] == nil then
-                    element[key] = defaults[key]
+                    element[key] = kind_defaults[key]
                 end
             end
         end
