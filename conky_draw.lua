@@ -151,7 +151,7 @@ function draw_ring_graph(display, element)
         radius = element.radius,
 
         start_angle = element.start_angle,
-        end_angle = element.end_angle + bar_degrees,
+        end_angle = element.start_angle + bar_degrees,
 
         color = element['bar_color' .. critical_or_not_suffix],
         alpha = element['bar_alpha' .. critical_or_not_suffix],
