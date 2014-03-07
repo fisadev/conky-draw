@@ -70,7 +70,7 @@ function draw_bar_graph(display, element)
         thickness = element['background_thickness' .. critical_or_not_suffix],
     }
 
-    -- bar line (bar)
+    -- bar line
     bar_line = {
         from = element.from,
         to = {x=element.from.x + bar_x_side, y=element.from.y + bar_y_side},
@@ -137,7 +137,7 @@ function draw_ring_graph(display, element)
         thickness = element['background_thickness' .. critical_or_not_suffix],
     }
 
-    -- bar ring (bar)
+    -- bar ring
     bar_ring = {
         center = element.center,
         radius = element.radius,
