@@ -166,6 +166,11 @@ function draw_static_text(display, element)
 end
 
 
+function draw_clock(display, element)
+    error('clock element kind not implemented')
+end
+
+
 -- properties that the user *must* define, because they don't have default
 -- values
 requirements = {
@@ -173,6 +178,9 @@ requirements = {
     bar_graph = {'from', 'to', 'conky_value'},
     ring = {'center', 'radius'},
     ring_graph = {'center', 'radius', 'conky_value'},
+    variable_text = {},
+    static_text = {},
+    clock = {},
 }
 
 
@@ -251,6 +259,9 @@ defaults = {
         color = 0x00FF6E,
 
         draw_function = draw_static_text,
+    },
+    clock = {
+        draw_function = draw_clock,
     },
 }
 
