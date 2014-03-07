@@ -118,8 +118,8 @@ Now, the elements and properties
 +---------------------------------------------------------------+
 | **line**: a simple straight line from point A to point B.     |
 +---------------------------------------------------------------+
-| :from (required): A point where the line should start.        |
-| :to (required): A point where the line should end.            |
+| :from: (required) A point where the line should start.        |
+| :to: (required) A point where the line should end.            |
 | :color: Color of the line.                                    |
 | :alpha: Transpacency level of the line.                       |
 | :thickness: Thickness of the line.                            |
