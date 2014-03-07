@@ -101,7 +101,7 @@ But first, some general notions on the values of properties.
 |                        | Example: ``thickness = 5``                                                                                                                         |
 +------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
 | conky value            | Its value should be a string of a conky value to use, and when used for graphs, should be something that yields a number. All the possible conky   |
-|                        | values are listed `here <http://conky.sourceforge.net/variables.html>`_                                                                            |
+|                        | values are listed `here <http://conky.sourceforge.net/variables.html>`_.                                                                           |
 |                        | Example: ``conky_value = 'upspeedf eth0'``                                                                                                         |
 +------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
 | max value              | It should be maximum possible value for the conky value used in a graph. It's needed to calculate the length of the bars in the graphs, so be sure |
