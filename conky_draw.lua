@@ -281,7 +281,7 @@ function conky_main()
 
     if tonumber(conky_parse('${updates}')) > 3 then
         for i, element in pairs(elements) do
-            if element[draw_function] == nil then
+            if element.['draw_function'] == nil then
                 error("Unknown element kind, can't draw it: " + element.kind)
             else
                 element.draw_function(display, element)
