@@ -115,43 +115,37 @@ But first, some general notions on the values of properties.
 Now, the elements and properties
 --------------------------------
 
-+---------------------------------------------------------------+
-| **line**: a simple straight line from point A to point B.     |
-+---------------------------------------------------------------+
-| :from: (required) A point where the line should start.        |
-| :to: (required) A point where the line should end.            |
-| :color: Color of the line.                                    |
-| :alpha: Transpacency level of the line.                       |
-| :thickness: Thickness of the line.                            |
-+---------------------------------------------------------------+
++---------------------------------------------------------------------------------------------------+
+| **line**: a simple straight line from point A to point B.                                         |
++---------------------------------------------------------------------------------------------------+
+| :from: (required) A point where the line should start.                                            |
+| :to: (required) A point where the line should end.                                                |
+| :color: Color of the line.                                                                        |
+| :alpha: Transpacency level of the line.                                                           |
+| :thickness: Thickness of the line.                                                                |
++---------------------------------------------------------------------------------------------------+
 
-**bar_graph**: a bar graph, able to display a value from conky, and optionaly able to change appearance when the value hits a "critical" threshold.
-
-+--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| from (required)                | A point where the bar graph should start.                                                                                              |
-+--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| to (required)                  | A point where the bar graph should end.                                                                                                |
-+--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| conky_value (required)         | Conky value to use on the graph.                                                                                                       |
-+--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| max_value and                  | For the conky value being used on the graph.                                                                                           |
-| critical_threshold             |                                                                                                                                        |
-+--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| background_color,              | For the appearance of the background of the graph in normal conditions.                                                                |
-| background_alpha and           |                                                                                                                                        |
-| background_thickness           |                                                                                                                                        |
-+--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| bar_color, bar_alpha and       | For the appearance of the bar of the graph in normal conditions.                                                                       |
-| bar_thickness                  |                                                                                                                                        |
-+--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| background_color_critical,     | For the appearance of the background of the graph when the value is above critical threshold.                                          |
-| background_alpha_critical and  |                                                                                                                                        |
-| background_thickness_critical  |                                                                                                                                        |
-+--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| bar_color_critical,            | For the appearance of the bar of the graph when the value is above critical threshold.                                                 |
-| bar_alpha_critical and         |                                                                                                                                        |
-| bar_thickness_critical         |                                                                                                                                        |
-+--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
++---------------------------------------------------------------------------------------------------+
+| **bar_graph**: a bar graph, able to display a value from conky, and optionaly able to change      |
+| appearance when the value hits a "critical" threshold.                                            |
++---------------------------------------------------------------------------------------------------+
+| :from:                                                                                            |
+|   (required) A point where the bar graph should start.                                            |
+| :to:                                                                                              |
+|   (required) A point where the bar graph should end.                                              |
+| :conky_value:                                                                                     |
+|   (required) Conky value to use on the graph.                                                     |
+| :max_value and critical_threshold:                                                                |
+|   For the conky value being used on the graph.                                                    |
+| :background_color, background_alpha and background_thickness:                                     |
+|   For the appearance of the background of the graph in normal conditions.                         |
+| :bar_color, bar_alpha and bar_thickness:                                                          |
+|   For the appearance of the bar of the graph in normal conditions.                                |
+| :background_color_critical, background_alpha_critical and background_thickness_critical:          |
+|   For the appearance of the background of the graph when the value is above critical threshold.   |
+| :bar_color_critical, bar_alpha_critical and bar_thickness_critical:                               |
+|   For the appearance of the bar of the graph when the value is above critical threshold.          |
++---------------------------------------------------------------------------------------------------+
 
 **ring**: a simple ring (can be a section of the ring too).
 
