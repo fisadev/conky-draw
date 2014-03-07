@@ -15,6 +15,7 @@ function get_conky_value(conky_value, is_number)
     local value = conky_parse(string.format('${%s}', conky_value))
     if is_number then
         value = tonumber(value) 
+    end
     return value
 end
 
