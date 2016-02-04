@@ -112,6 +112,9 @@ But first, some general notions on the values of properties.
 |                        | changes.                                                                                                                                           |
 |                        | Example: ``critical_threshold = 90``                                                                                                               |
 +------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
+| boolean                | It should be either true or false, with no quotes.                                                                                                 |
+|                        | Example: ``change_color_on_critical = true``                                                                                                               |
++------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
 
 Now, the elements and properties
 --------------------------------
@@ -155,6 +158,10 @@ bar_graph:
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 | bar_color, bar_alpha and       | For the appearance of the bar of the graph in normal conditions.                                                                       |
 | bar_thickness                  |                                                                                                                                        |
++--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+| change_color_on_critical,      | Booleans to control wether the color, alpha and thickness of both background and bar changes when the critical value is reached.       |
+| change_alpha_on_critical and   |                                                                                                                                        |
+| change_thickness_on_critical   |                                                                                                                                        |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 | background_color_critical,     | For the appearance of the background of the graph when the value is above critical threshold.                                          |
 | background_alpha_critical and  |                                                                                                                                        |
@@ -213,6 +220,10 @@ ring_graph:
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 | bar_color, bar_alpha and       | For the appearance of the bar of the graph in normal conditions.                                                                       |
 | bar_thickness                  |                                                                                                                                        |
++--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+| change_color_on_critical,      | Booleans to control wether the color, alpha and thickness of both background and bar changes when the critical value is reached.       |
+| change_alpha_on_critical and   |                                                                                                                                        |
+| change_thickness_on_critical   |                                                                                                                                        |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 | background_color_critical,     | For the appearance of the background of the graph when the value is above critical threshold.                                          |
 | background_alpha_critical and  |                                                                                                                                        |
