@@ -59,9 +59,19 @@ function draw_bar_graph(display, element)
     local bar_y_side = bar_hypotenuse * math.sin(angle)
 
     -- is it in critical value?
-    local critical_or_not_suffix = ''
+    local color_critical_or_not_suffix = ''
+    local alpha_critical_or_not_suffix = ''
+    local thickness_critical_or_not_suffix = ''
     if value >= element.critical_threshold then
-        critical_or_not_suffix = '_critical'
+        if element.change_color_on_critical then
+            color_critical_or_not_suffix = '_critical'
+        end
+        if element.change_alpha_on_critical then
+            alpha_critical_or_not_suffix = '_critical'
+        end
+        if element.change_thickness_on_critical then
+            thickness_critical_or_not_suffix = '_critical'
+        end
     end
 
     -- background line (full graph)
@@ -69,9 +79,9 @@ function draw_bar_graph(display, element)
         from = element.from,
         to = element.to,
 
-        color = element['background_color' .. critical_or_not_suffix],
-        alpha = element['background_alpha' .. critical_or_not_suffix],
-        thickness = element['background_thickness' .. critical_or_not_suffix],
+        color = element['background_color' .. color_critical_or_not_suffix],
+        alpha = element['background_alpha' .. alpha_critical_or_not_suffix],
+        thickness = element['background_thickness' .. thickness_critical_or_not_suffix],
     }
 
     -- bar line
@@ -79,9 +89,9 @@ function draw_bar_graph(display, element)
         from = element.from,
         to = {x=element.from.x + bar_x_side, y=element.from.y + bar_y_side},
 
-        color = element['bar_color' .. critical_or_not_suffix],
-        alpha = element['bar_alpha' .. critical_or_not_suffix],
-        thickness = element['bar_thickness' .. critical_or_not_suffix],
+        color = element['bar_color' .. color_critical_or_not_suffix],
+        alpha = element['bar_alpha' .. alpha_critical_or_not_suffix],
+        thickness = element['bar_thickness' .. thickness_critical_or_not_suffix],
     }
 
     -- draw both lines
@@ -214,6 +224,10 @@ defaults = {
         bar_alpha_critical = 1.0,
         bar_thickness_critical = 5,
 
+        change_color_on_critical = true,
+        change_alpha_on_critical = false,
+        change_thickness_on_critical = false,
+
         draw_function = draw_bar_graph,
     },
     ring_graph = {
@@ -235,6 +249,10 @@ defaults = {
         bar_color_critical = 0xFA002E,
         bar_alpha_critical = 1.0,
         bar_thickness_critical = 5,
+
+        change_color_on_critical = true,
+        change_alpha_on_critical = false,
+        change_thickness_on_critical = false,
 
         start_angle = 0, 
         end_angle = 360,
