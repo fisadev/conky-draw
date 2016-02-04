@@ -42,6 +42,10 @@ function draw_bar_graph(display, element)
     
     -- get current value
     local value = get_conky_value(element.conky_value, true)
+
+    if value > element.max_value then
+        value = element.max_value
+    end
     
     -- dimensions of the full graph
     local x_side = element.to.x - element.from.x
@@ -111,6 +115,10 @@ function draw_ring_graph(display, element)
     
     -- get current value
     local value = get_conky_value(element.conky_value, true)
+
+    if value > element.max_value then
+        value = element.max_value
+    end
 
     -- dimensions of the full graph
     local degrees = element.end_angle - element.start_angle
