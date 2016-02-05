@@ -150,7 +150,7 @@ or this if you are using conky 1.10 or newer:
         lua_draw_hook_pre = 'main',
     };
 
-3. Customize the ``conky_draw_config.lua`` file as you wish (examples below)
+3. Customize the ``conky_draw_config.lua`` file as you wish. You just need to add elements in the ``elements`` variable (examples above).
 4. Be sure to run conky from **inside** your ``.conky`` folder. Example: ``cd .conky && conky -c conkyrc``
 
 
@@ -325,14 +325,9 @@ ring_graph:
 static_text: 
 ------------
 
-Not yet implemented.
+Not yet implemented (you can just use your conkyrc text).
 
 variable_text: 
 --------------
 
-Not yet implemented.
-
-clock: 
-------
-
-Not yet implemented.
+Not yet implemented (you can just use your conkyrc text).
