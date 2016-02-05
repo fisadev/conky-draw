@@ -192,7 +192,7 @@ But first, some general notions on the values of properties.
 |                        | Example: ``critical_threshold = 90``                                                                                                               |
 +------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
 | boolean                | It should be either true or false, with no quotes.                                                                                                 |
-|                        | Example: ``change_color_on_critical = true``                                                                                                               |
+|                        | Example: ``change_color_on_critical = true``                                                                                                       |
 +------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------+
 
 Now, the elements and properties
