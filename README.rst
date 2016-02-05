@@ -3,12 +3,127 @@ conky-draw
 
 Easily create beautiful conky graphs and draws.
 
-The main idea is this: stop copying and pasting random code from the web to your monolithic conkyrc + something.lua. Start using a nicely defined set of visual elements, in a very clean config file, separated from the code that has the drawing logic.
+The main idea is this: stop copying and pasting random code from the web to your monolithic conkyrc + something.lua. Start using a nicely defined set of visual elements, in a very clean config file, separated from the code that has the drawing logic. "You ask, conky_draw draws".
+
+Examples
+--------
+
+.. image:: ./samples/sample1.png
 
 
-Work in progress. Right now you can only define bar and ring graphs, and static lines and rings. But I'm working on:
+Simple disk usage.
 
-* A short tutorial and some examples.
+.. code:: lua
+
+    { 
+        kind = 'bar_graph',
+        conky_value = 'fs_used_perc /home/',
+        from = {x = 0, y = 45},
+        to = {x = 180, y = 45},
+        background_thickness = 20,
+        bar_thickness = 16,
+    },
+
+
+.. image:: ./samples/sample2.png
+
+
+Normal vs critical mode. You can even decide what changes when critical values are reached.
+
+.. code:: lua
+
+    { 
+        kind = 'bar_graph',
+        conky_value = 'fs_used_perc /home/',
+        from = {x = 50, y = 120},
+        to = {x = 120, y = 45},
+
+        background_thickness = 5,
+        background_color = 0x00E5FF,
+
+        bar_thickness = 5,
+        bar_color = 0x00E5FF,
+
+        critical_threshold = 60,
+
+        change_color_on_critical = true,
+        change_thickness_on_critical = true,
+
+        background_color_critical = 0xFFA0A0,
+        background_thickness_critical = 10,
+
+        bar_color_critical = 0xFF0000,
+        bar_thickness_critical = 13
+    },
+
+
+.. image:: ./samples/sample3.png
+
+
+Everybody loves ring graphs in conky.
+
+.. code:: lua
+
+    { 
+        kind = 'ring_graph',
+        conky_value = 'fs_used_perc /home/',
+        center = {x = 75, y = 100},
+        radius = 30,
+    },
+
+
+.. image:: ./samples/sample4.png
+
+
+Lord of the customized rings.
+
+.. code:: lua
+
+    { 
+        kind = 'ring_graph',
+        conky_value = 'fs_used_perc /home/',
+        center = {x = 75, y = 100},
+        radius = 30,
+
+        background_color = 0xFFFFFF,
+        background_alpha = 1,
+        background_thickness = 35,
+
+        bar_color = 0x00E5FF,
+        bar_alpha = 1,
+        bar_thickness = 15,
+    },
+
+
+.. image:: ./samples/sample5.png
+
+
+Or even ring fragments.
+
+.. code:: lua
+
+    { 
+        kind = 'ring_graph',
+        conky_value = 'fs_used_perc /home/',
+        center = {x = 75, y = 100},
+        radius = 30,
+
+        background_color = 0xFFFFFF,
+        background_alpha = 0.7,
+        background_thickness = 2,
+
+        bar_color = 0xFFFFFF,
+        bar_alpha = 1,
+        bar_thickness = 6,
+
+        start_angle = 140,
+        end_angle = 300,
+    },
+
+
+
+Right now you can define bar and ring graphs, and static lines and rings. Plans for the future:
+
 * Draw text elements (on arbitrary positions/areas, not like traditional conkyrc).
 * More basic elements: filled circles, rectangles, ...
 * Other more complex visual elements (example: clocks)
@@ -24,59 +139,23 @@ Installation
     lua_load ./conky_draw.lua
     lua_draw_hook_post main
 
+or this if you are using conky 1.10 or newer:
+
+.. code:: lua
+
+    conky.config = {
+        -- (...)
+
+        lua_load = 'conky_draw.lua',
+        lua_draw_hook_pre = 'main',
+    };
+
 3. Customize the ``conky_draw_config.lua`` file as you wish (examples below)
 4. Be sure to run conky from **inside** your ``.conky`` folder. Example: ``cd .conky && conky -c conkyrc``
 
 
-Basic examples
--------------
-
-Not so nice examples, but better have something before we write a nice tutorial:
-
-.. code:: lua
-
-    elements = {
-        {
-            kind = 'line',
-            from = {x=200, y=200},
-            to = {x=300, y=400},
-
-            color = 0xFF00FF,
-            alpha = 1,
-            thickness = 3,
-        },
-        {
-            kind = 'ring',
-            center = {x=200, y=200},
-            radius = 50,
-
-            color = 0xFF00FF,
-            alpha = 1,
-            thickness = 3,
-
-            start_angle = 270,
-            end_angle = 90,
-        },
-        {
-            kind = 'bar_graph',
-            conky_value = 'cpu cpu0',
-            from = {x=200, y=200},
-            to = {x=300, y=300},
-        },
-        {
-            kind = 'ring_graph',
-            conky_value = 'cpu cpu0',
-            center = {x=200, y=200},
-            radius = 80,
-
-            start_angle = 0,
-            end_angle = 270,
-        },
-    }
-
-
-Available elements and their properties
----------------------------------------
+Full list of available elements and their properties
+----------------------------------------------------
 
 Properties marked as **required** must be defined by you. The rest have default values, you can leave them undefined, or define them with the values you like.
  
