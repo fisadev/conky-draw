@@ -14,7 +14,7 @@ function get_conky_value(conky_value, is_number)
 
     local value = conky_parse(string.format('${%s}', conky_value))
     if is_number then
-        value = tonumber(value) 
+        value = tonumber(value)
     end
     return value
 end
@@ -39,14 +39,14 @@ end
 function draw_bar_graph(display, element)
     -- draw a bar graph
     -- Used a little bit of trigonometry to be able to draw bars in any direction! :)
-    
+
     -- get current value
     local value = get_conky_value(element.conky_value, true)
 
     if value > element.max_value then
         value = element.max_value
     end
-    
+
     -- dimensions of the full graph
     local x_side = element.to.x - element.from.x
     local y_side = element.to.y - element.from.y
@@ -107,7 +107,7 @@ function draw_ring(display, element)
     local start_angle, end_angle = math.rad(element.start_angle), math.rad(element.end_angle)
 
     -- direction of the ring changes the function we must call
-    local arc_drawer = cairo_arc 
+    local arc_drawer = cairo_arc
     if start_angle > end_angle then
         arc_drawer = cairo_arc_negative
     end
@@ -122,7 +122,7 @@ end
 
 function draw_ring_graph(display, element)
     -- draw a ring graph
-    
+
     -- get current value
     local value = get_conky_value(element.conky_value, true)
 
@@ -174,6 +174,86 @@ function draw_ring_graph(display, element)
 end
 
 
+function draw_ring_graph(display, element)
+    -- draw a ring graph
+
+    -- get current value
+    local value = get_conky_value(element.conky_value, true)
+
+    if value > element.max_value then
+        value = element.max_value
+    end
+
+    -- dimensions of the full graph
+    local degrees = element.end_angle - element.start_angle
+
+    -- dimensions of the value bar
+    local bar_degrees = value * (degrees / element.max_value)
+
+    -- is it in critical value?
+    local critical_or_not_suffix = ''
+    if value >= element.critical_threshold then
+        critical_or_not_suffix = '_critical'
+    end
+
+    -- background ring (full graph)
+    background_ellipse = {
+        center = element.center,
+        radius = element.radius,
+        width = element.width,
+        height =element.height,
+        start_angle = element.start_angle,
+        end_angle = element.end_angle,
+
+        color = element['background_color' .. critical_or_not_suffix],
+        alpha = element['background_alpha' .. critical_or_not_suffix],
+        thickness = element['background_thickness' .. critical_or_not_suffix],
+    }
+
+    -- bar ring
+    bar_ellipse = {
+        center = element.center,
+        radius = element.radius,
+        width = element.width,
+        height =element.height,
+        start_angle = element.start_angle,
+        end_angle = element.start_angle + bar_degrees,
+
+        color = element['bar_color' .. critical_or_not_suffix],
+        alpha = element['bar_alpha' .. critical_or_not_suffix],
+        thickness = element['bar_thickness' .. critical_or_not_suffix],
+    }
+
+    -- draw both rings
+    draw_ellipse(display, background_ellipse)
+    draw_ellipse(display, bar_ellipse)
+end
+
+
+function draw_ellipse(display, element)
+    -- draw a ring
+
+    -- the user types degrees, but we need radians
+    local start_angle, end_angle = math.rad(element.start_angle), math.rad(element.end_angle)
+
+    -- direction of the ring changes the function we must call
+    local arc_drawer = cairo_arc
+    if start_angle > end_angle then
+        arc_drawer = cairo_arc_negative
+    end
+
+    -- draw the ring
+    cairo_set_source_rgba(display, hexa_to_rgb(element.color, element.alpha))
+    cairo_set_line_width(display, element.thickness);
+    cairo_save (display);
+    cairo_translate (display, element.center.x + width / 2., element.center.y + height / 2.);
+    cairo_scale (display, width / 2., height / 2.);
+    arc_drawer(display, element.center.x, element.center.y, element.radius, start_angle, end_angle)
+    cairo_restore(display);
+    cairo_stroke(display);
+end
+
+
 function draw_variable_text(display, element)
     error('variable_text element kind not implemented')
 end
@@ -196,6 +276,8 @@ requirements = {
     bar_graph = {'from', 'to', 'conky_value'},
     ring = {'center', 'radius'},
     ring_graph = {'center', 'radius', 'conky_value'},
+    ellipse ={'center', 'radius', 'width','height'},
+    ellipse_graph ={'center', 'radius', 'width','height','conky_value'},
     variable_text = {},
     static_text = {},
     clock = {},
@@ -254,7 +336,7 @@ defaults = {
         change_alpha_on_critical = false,
         change_thickness_on_critical = false,
 
-        start_angle = 0, 
+        start_angle = 0,
         end_angle = 360,
 
         draw_function = draw_ring_graph,
@@ -271,10 +353,20 @@ defaults = {
         alpha = 0.2,
         thickness = 5,
 
-        start_angle = 0, 
+        start_angle = 0,
         end_angle = 360,
 
         draw_function = draw_ring,
+    },
+    ellipse = {
+        color = 0x00FF6E,
+        alpha = 0.2,
+        thickness = 5,
+
+        start_angle = 0,
+        end_angle = 360,
+
+        draw_function = draw_ellipse,
     },
     variable_text = {
         color = 0x00FF6E,
@@ -336,17 +428,17 @@ end
 
 
 function conky_main()
-    if conky_window == nil then 
+    if conky_window == nil then
         return
     end
 
     check_requirements(elements)
     fill_defaults(elements)
 
-    local surface = cairo_xlib_surface_create(conky_window.display, 
-                                              conky_window.drawable, 
-                                              conky_window.visual, 
-                                              conky_window.width, 
+    local surface = cairo_xlib_surface_create(conky_window.display,
+                                              conky_window.drawable,
+                                              conky_window.visual,
+                                              conky_window.width,
                                               conky_window.height)
     local display = cairo_create(surface)
 
@@ -358,4 +450,3 @@ function conky_main()
 
     cairo_surface_destroy(surface)
 end
-
