@@ -174,7 +174,7 @@ function draw_ring_graph(display, element)
 end
 
 
-function draw_ring_graph(display, element)
+function draw_ellipse_graph(display, element)
     -- draw a ring graph
 
     -- get current value
@@ -204,7 +204,7 @@ function draw_ring_graph(display, element)
         height =element.height,
         start_angle = element.start_angle,
         end_angle = element.end_angle,
-
+        rotation_angle= element.rotation_angle,
         color = element['background_color' .. critical_or_not_suffix],
         alpha = element['background_alpha' .. critical_or_not_suffix],
         thickness = element['background_thickness' .. critical_or_not_suffix],
@@ -218,7 +218,7 @@ function draw_ring_graph(display, element)
         height =element.height,
         start_angle = element.start_angle,
         end_angle = element.start_angle + bar_degrees,
-
+        rotation_angle= element.rotation_angle,
         color = element['bar_color' .. critical_or_not_suffix],
         alpha = element['bar_alpha' .. critical_or_not_suffix],
         thickness = element['bar_thickness' .. critical_or_not_suffix],
@@ -235,7 +235,7 @@ function draw_ellipse(display, element)
 
     -- the user types degrees, but we need radians
     local start_angle, end_angle = math.rad(element.start_angle), math.rad(element.end_angle)
-
+    local rotation_angle = math.rad(element.rotation_angle)
     -- direction of the ring changes the function we must call
     local arc_drawer = cairo_arc
     if start_angle > end_angle then
@@ -243,14 +243,18 @@ function draw_ellipse(display, element)
     end
 
     -- draw the ring
-    cairo_set_source_rgba(display, hexa_to_rgb(element.color, element.alpha))
-    cairo_set_line_width(display, element.thickness);
-    cairo_save (display);
-    cairo_translate (display, element.center.x + width / 2., element.center.y + height / 2.);
-    cairo_scale (display, width / 2., height / 2.);
+    cairo_set_source_rgba(display,hexa_to_rgb(element.color, element.alpha))
+    cairo_set_line_width(display, element.thickness)
+
+    cairo_save(display)
+    cairo_translate (display, element.center.x + element.width / 2., element.center.y + element.height / 2.)
+
+    cairo_scale (display, element.width / 2., element.height / 2.)
     arc_drawer(display, element.center.x, element.center.y, element.radius, start_angle, end_angle)
-    cairo_restore(display);
-    cairo_stroke(display);
+    cairo_restore(display)
+
+    cairo_stroke(display)
+    --cairo_rotate(display,rotation_angle)
 end
 
 
@@ -358,6 +362,35 @@ defaults = {
 
         draw_function = draw_ring,
     },
+    ellipse_graph = {
+        max_value = 100.,
+        critical_threshold = 90.,
+
+        background_color = 0x00FF6E,
+        background_alpha = 0.2,
+        background_thickness = 5,
+
+        bar_color = 0x00FF6E,
+        bar_alpha = 1.0,
+        bar_thickness = 5,
+
+        background_color_critical = 0xFA002E,
+        background_alpha_critical = 0.2,
+        background_thickness_critical = 5,
+
+        bar_color_critical = 0xFA002E,
+        bar_alpha_critical = 1.0,
+        bar_thickness_critical = 5,
+
+        change_color_on_critical = true,
+        change_alpha_on_critical = false,
+        change_thickness_on_critical = false,
+
+        start_angle = 0,
+        end_angle = 360,
+        rotation_angle=0,
+        draw_function = draw_ellipse_graph,
+    },
     ellipse = {
         color = 0x00FF6E,
         alpha = 0.2,
@@ -365,7 +398,7 @@ defaults = {
 
         start_angle = 0,
         end_angle = 360,
-
+        rotation_angle=0,
         draw_function = draw_ellipse,
     },
     variable_text = {
