@@ -26,13 +26,33 @@ function draw_line(display, element)
     -- deltas for x and y (cairo expects a point and deltas for both axis)
     local x_side = element.to.x - element.from.x -- not abs! because they are deltas
     local y_side = element.to.y - element.from.y -- and the same here
+    local from_x =element.from.x
+    local from_y = element.from.y
 
-    -- draw line
-    cairo_set_source_rgba(display, hexa_to_rgb(element.color, element.alpha))
-    cairo_set_line_width(display, element.thickness);
-    cairo_move_to(display, element.from.x, element.from.y);
-    cairo_rel_line_to(display, x_side, y_side);
-    cairo_stroke(display);
+    if not element.graduated then
+      -- draw line
+      cairo_set_source_rgba(display, hexa_to_rgb(element.color, element.alpha))
+      cairo_set_line_width(display, element.thickness);
+      cairo_move_to(display, element.from.x, element.from.y);
+      cairo_rel_line_to(display, x_side, y_side);
+      --cairo_stroke(display);
+    else
+      -- draw graduated line
+      cairo_set_source_rgba(display, hexa_to_rgb(element.color, element.alpha))
+      cairo_set_line_width(display, element.thickness);
+      local space_graduation_x = (x_side-x_side/element.space_between_graduation+1)/element.number_graduation
+      local space_graduation_y =(y_side-y_side/element.space_between_graduation+1)/element.number_graduation
+      local space_x = x_side/element.number_graduation-space_graduation_x
+      local space_y = y_side/element.number_graduation-space_graduation_y
+
+      for i=1,element.number_graduation do
+          cairo_move_to(display,from_x,from_y)
+          from_x=from_x+space_x+space_graduation_x
+          from_y=from_y+space_y+space_graduation_y
+          cairo_rel_line_to(display,space_x,space_y)
+      end
+    end
+    cairo_stroke(display)
 end
 
 
@@ -349,7 +369,9 @@ defaults = {
         color = 0x00FF6E,
         alpha = 0.2,
         thickness = 5,
-
+        graduated = false,
+        number_graduation=0,
+        space_between_graduation=1,
         draw_function = draw_line,
     },
     ring = {
