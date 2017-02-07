@@ -13,8 +13,12 @@ function get_conky_value(conky_value, is_number)
     -- example: "cpu cpu0" --> 20
 
     local value = conky_parse(string.format('${%s}', conky_value))
+
     if is_number then
         value = tonumber(value)
+    end
+    if value==nil then
+      return 0
     end
     return value
 end
@@ -61,9 +65,9 @@ function draw_bar_graph(display, element)
     -- Used a little bit of trigonometry to be able to draw bars in any direction! :)
 
     -- get current value
-    local value = get_conky_value(element.conky_value, true)
 
-    if value > element.max_value then
+    value = get_conky_value(element.conky_value, true)
+    if value > element.max_value   then
         value = element.max_value
     end
 
@@ -102,9 +106,10 @@ function draw_bar_graph(display, element)
         color = element['background_color' .. color_critical_or_not_suffix],
         alpha = element['background_alpha' .. alpha_critical_or_not_suffix],
         thickness = element['background_thickness' .. thickness_critical_or_not_suffix],
+        graduated = element.graduated,
+        number_graduation=element.number_graduation,
+        space_between_graduation=element.space_between_graduation,
     }
-
-    -- bar line
     bar_line = {
         from = element.from,
         to = {x=element.from.x + bar_x_side, y=element.from.y + bar_y_side},
@@ -113,10 +118,32 @@ function draw_bar_graph(display, element)
         alpha = element['bar_alpha' .. alpha_critical_or_not_suffix],
         thickness = element['bar_thickness' .. thickness_critical_or_not_suffix],
     }
-
     -- draw both lines
     draw_line(display, background_line)
-    draw_line(display, bar_line)
+
+  if element.graduated then
+      cairo_set_source_rgba(display, hexa_to_rgb(bar_line.color, bar_line.alpha))
+      cairo_set_line_width(display, bar_line.thickness);
+      local from_x = bar_line.from.x
+      local from_y = bar_line.from.y
+      local space_graduation_x = (x_side-x_side/element.space_between_graduation+1)/element.number_graduation
+      local space_graduation_y =(y_side-y_side/element.space_between_graduation+1)/element.number_graduation
+      local space_x = x_side/element.number_graduation-space_graduation_x
+      local space_y = y_side/element.number_graduation-space_graduation_y
+
+      for i=1,bar_x_side/(space_x+space_graduation_x) do
+
+          cairo_move_to(display,from_x,from_y)
+          from_x=from_x+space_x+space_graduation_x
+          from_y=from_y+space_y+space_graduation_y
+          cairo_rel_line_to(display,space_x,space_y)
+      end
+
+    cairo_stroke(display)
+  else
+    draw_line(display,bar_line);
+  end
+
 end
 
 
@@ -333,6 +360,10 @@ defaults = {
         change_color_on_critical = true,
         change_alpha_on_critical = false,
         change_thickness_on_critical = false,
+
+        graduated = false,
+        number_graduation=0,
+        space_between_graduation=1,
 
         draw_function = draw_bar_graph,
     },
