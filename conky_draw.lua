@@ -170,6 +170,7 @@ function draw_ring(display, element)
       local angle_between_graduation = math.rad(element.angle_between_graduation)
       local graduation_size = math.abs(end_angle-start_angle)/element.number_graduation - angle_between_graduation
       local current_start = start_angle
+      print(graduation_size)
       for i=1, element.number_graduation do
         arc_drawer(display, element.center.x, element.center.y, element.radius, current_start, current_start+graduation_size* orientation)
         current_start= current_start+ (graduation_size+angle_between_graduation)* orientation
@@ -234,7 +235,30 @@ function draw_ring_graph(display, element)
 
     -- draw both rings
     draw_ring(display, background_ring)
-    draw_ring(display, bar_ring)
+    if not element.graduated then
+      draw_ring(display, bar_ring)
+    else
+      local start_angle, end_angle = math.rad(element.start_angle), math.rad(element.end_angle)
+      local arc_drawer = cairo_arc
+      local orientation = 1
+      if start_angle > end_angle then
+          arc_drawer = cairo_arc_negative
+          orientation = -1
+      end
+      cairo_set_source_rgba(display, hexa_to_rgb(bar_ring.color, bar_ring.alpha))
+      cairo_set_line_width(display, bar_ring.thickness);
+
+      local angle_between_graduation = math.rad(element.angle_between_graduation)
+      local graduation_size = math.abs(end_angle-start_angle)/element.number_graduation - angle_between_graduation
+      local current_start = start_angle
+      bar_degrees=math.rad(bar_degrees)
+      for i=1, bar_degrees/(graduation_size+angle_between_graduation) do
+        arc_drawer(display, element.center.x, element.center.y, element.radius, current_start, current_start+graduation_size* orientation)
+        current_start= current_start+ (graduation_size+angle_between_graduation)* orientation
+        cairo_stroke(display);
+      end
+    end
+
 end
 
 
