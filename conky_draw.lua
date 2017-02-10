@@ -155,15 +155,28 @@ function draw_ring(display, element)
 
     -- direction of the ring changes the function we must call
     local arc_drawer = cairo_arc
+    local orientation = 1
     if start_angle > end_angle then
         arc_drawer = cairo_arc_negative
+        orientation = -1
     end
-
-    -- draw the ring
     cairo_set_source_rgba(display, hexa_to_rgb(element.color, element.alpha))
     cairo_set_line_width(display, element.thickness);
-    arc_drawer(display, element.center.x, element.center.y, element.radius, start_angle, end_angle)
-    cairo_stroke(display);
+    -- draw the ring
+    if not element.graduated then
+      arc_drawer(display, element.center.x, element.center.y, element.radius, start_angle, end_angle)
+      cairo_stroke(display);
+    else
+      local angle_between_graduation = math.rad(element.angle_between_graduation)
+      local graduation_size = math.abs(end_angle-start_angle)/element.number_graduation - angle_between_graduation
+      local current_start = start_angle
+      for i=1, element.number_graduation do
+        arc_drawer(display, element.center.x, element.center.y, element.radius, current_start, current_start+graduation_size* orientation)
+        current_start= current_start+ (graduation_size+angle_between_graduation)* orientation
+        cairo_stroke(display);
+      end
+    end
+
 end
 
 
@@ -196,6 +209,10 @@ function draw_ring_graph(display, element)
 
         start_angle = element.start_angle,
         end_angle = element.end_angle,
+
+        graduated=element.graduated,
+        number_graduation= element.number_graduation,
+        angle_between_graduation =element.angle_between_graduation,
 
         color = element['background_color' .. critical_or_not_suffix],
         alpha = element['background_alpha' .. critical_or_not_suffix],
@@ -394,6 +411,10 @@ defaults = {
         start_angle = 0,
         end_angle = 360,
 
+        graduated = false,
+        number_graduation=0,
+        angle_between_graduation=1,
+
         draw_function = draw_ring_graph,
     },
     line = {
@@ -412,6 +433,10 @@ defaults = {
 
         start_angle = 0,
         end_angle = 360,
+
+        graduated = false,
+        number_graduation=0,
+        angle_between_graduation=1,
 
         draw_function = draw_ring,
     },
@@ -442,6 +467,11 @@ defaults = {
         start_angle = 0,
         end_angle = 360,
         rotation_angle=0,
+
+        graduated = false,
+        number_graduation=0,
+        angle_between_graduation=1,
+
         draw_function = draw_ellipse_graph,
     },
     ellipse = {
@@ -452,6 +482,11 @@ defaults = {
         start_angle = 0,
         end_angle = 360,
         rotation_angle=0,
+
+        graduated = false,
+        number_graduation=0,
+        angle_between_graduation=1,
+
         draw_function = draw_ellipse,
     },
     variable_text = {
