@@ -170,7 +170,7 @@ function draw_ring(display, element)
       local angle_between_graduation = math.rad(element.angle_between_graduation)
       local graduation_size = math.abs(end_angle-start_angle)/element.number_graduation - angle_between_graduation
       local current_start = start_angle
-      print(graduation_size)
+
       for i=1, element.number_graduation do
         arc_drawer(display, element.center.x, element.center.y, element.radius, current_start, current_start+graduation_size* orientation)
         current_start= current_start+ (graduation_size+angle_between_graduation)* orientation
@@ -293,6 +293,11 @@ function draw_ellipse_graph(display, element)
         start_angle = element.start_angle,
         end_angle = element.end_angle,
         rotation_angle= element.rotation_angle,
+
+        graduated=element.graduated,
+        number_graduation= element.number_graduation,
+        angle_between_graduation =element.angle_between_graduation,
+
         color = element['background_color' .. critical_or_not_suffix],
         alpha = element['background_alpha' .. critical_or_not_suffix],
         thickness = element['background_thickness' .. critical_or_not_suffix],
@@ -314,7 +319,39 @@ function draw_ellipse_graph(display, element)
 
     -- draw both rings
     draw_ellipse(display, background_ellipse)
-    draw_ellipse(display, bar_ellipse)
+
+
+    if not element.graduated then
+      draw_ellipse(display, bar_ellipse)
+    else
+      local start_angle, end_angle = math.rad(element.start_angle), math.rad(element.end_angle)
+      local arc_drawer = cairo_arc
+      local orientation = 1
+      if start_angle > end_angle then
+          arc_drawer = cairo_arc_negative
+          orientation = -1
+      end
+      cairo_set_source_rgba(display, hexa_to_rgb(bar_ellipse.color, bar_ellipse.alpha))
+      cairo_set_line_width(display, bar_ellipse.thickness);
+
+      local angle_between_graduation = math.rad(element.angle_between_graduation)
+      local graduation_size = math.abs(end_angle-start_angle)/element.number_graduation - angle_between_graduation
+      local current_start = start_angle
+      bar_degrees=math.rad(bar_degrees)
+      for i=1, bar_degrees/(graduation_size+angle_between_graduation) do
+        cairo_save(display)
+        cairo_translate (display, element.center.x + element.width / 2., element.center.y + element.height / 2.)
+
+        cairo_scale (display, element.width / 2., element.height / 2.)
+        arc_drawer(display, element.center.x, element.center.y, element.radius, current_start, current_start+graduation_size* orientation)
+        current_start= current_start+ (graduation_size+angle_between_graduation)* orientation
+
+        cairo_restore(display)
+        cairo_stroke(display);
+      end
+    end
+
+
 end
 
 
@@ -325,24 +362,46 @@ function draw_ellipse(display, element)
     local start_angle, end_angle = math.rad(element.start_angle), math.rad(element.end_angle)
     local rotation_angle = math.rad(element.rotation_angle)
     -- direction of the ring changes the function we must call
-    local arc_drawer = cairo_arc
+      local arc_drawer = cairo_arc
+    local orientation = 1
     if start_angle > end_angle then
         arc_drawer = cairo_arc_negative
+        orientation = -1
     end
 
-    -- draw the ring
     cairo_set_source_rgba(display,hexa_to_rgb(element.color, element.alpha))
     cairo_set_line_width(display, element.thickness)
 
-    cairo_save(display)
-    cairo_translate (display, element.center.x + element.width / 2., element.center.y + element.height / 2.)
+    -- draw the ring
+    if not element.graduated then
+      print("ok")
+      cairo_save(display)
+      cairo_translate (display, element.center.x + element.width / 2., element.center.y + element.height / 2.)
+      cairo_scale (display, element.width / 2., element.height / 2.)
+      arc_drawer(display, element.center.x, element.center.y, element.radius, start_angle, end_angle)
+      cairo_restore(display)
+      cairo_stroke(display)
+      print("ok2")
+    else
+      local angle_between_graduation = math.rad(element.angle_between_graduation)
+      local graduation_size = math.abs(end_angle-start_angle)/element.number_graduation - angle_between_graduation
+      local current_start = start_angle
 
-    cairo_scale (display, element.width / 2., element.height / 2.)
-    arc_drawer(display, element.center.x, element.center.y, element.radius, start_angle, end_angle)
-    cairo_restore(display)
+      for i=1, element.number_graduation do
+        cairo_save(display)
+        cairo_translate (display, element.center.x + element.width / 2., element.center.y + element.height / 2.)
 
-    cairo_stroke(display)
-    --cairo_rotate(display,rotation_angle)
+        cairo_scale (display, element.width / 2., element.height / 2.)
+        arc_drawer(display, element.center.x, element.center.y, element.radius, current_start, current_start+graduation_size* orientation)
+        current_start= current_start+ (graduation_size+angle_between_graduation)* orientation
+
+        cairo_restore(display)
+        cairo_stroke(display);
+      end
+
+    end
+
+
 end
 
 
