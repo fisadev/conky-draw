@@ -374,14 +374,14 @@ function draw_ellipse(display, element)
 
     -- draw the ring
     if not element.graduated then
-      print("ok")
       cairo_save(display)
       cairo_translate (display, element.center.x + element.width / 2., element.center.y + element.height / 2.)
+
       cairo_scale (display, element.width / 2., element.height / 2.)
       arc_drawer(display, element.center.x, element.center.y, element.radius, start_angle, end_angle)
+
       cairo_restore(display)
       cairo_stroke(display)
-      print("ok2")
     else
       local angle_between_graduation = math.rad(element.angle_between_graduation)
       local graduation_size = math.abs(end_angle-start_angle)/element.number_graduation - angle_between_graduation
@@ -390,18 +390,13 @@ function draw_ellipse(display, element)
       for i=1, element.number_graduation do
         cairo_save(display)
         cairo_translate (display, element.center.x + element.width / 2., element.center.y + element.height / 2.)
-
         cairo_scale (display, element.width / 2., element.height / 2.)
         arc_drawer(display, element.center.x, element.center.y, element.radius, current_start, current_start+graduation_size* orientation)
         current_start= current_start+ (graduation_size+angle_between_graduation)* orientation
-
         cairo_restore(display)
         cairo_stroke(display);
       end
-
     end
-
-
 end
 
 
@@ -411,7 +406,25 @@ end
 
 
 function draw_static_text(display, element)
-    error('static_text element kind not implemented')
+      cairo_save(display)
+      cairo_move_to (display,element.from.x,element.from.y)
+      cairo_rotate(display,element.rotation_angle* (math.pi / 180))
+      cairo_set_source_rgba(display,hexa_to_rgb(element.color, element.alpha))
+      cairo_set_font_size (display, element.font_size)
+      local font_slant = CAIRO_FONT_SLANT_NORMAL
+      if element.italic then
+        font_slant=CAIRO_FONT_SLANT_ITALIC
+      end
+      local font_weight = CAIRO_FONT_WEIGHT_NORMAL
+      if element.bold then
+        font_weight=CAIRO_FONT_WEIGHT_BOLD
+      end
+      cairo_select_font_face(display,element.font,font_slant,font_weight)
+
+      cairo_show_text (display,element.text)
+
+      cairo_restore(display)
+      cairo_stroke (display)
 end
 
 
@@ -429,8 +442,8 @@ requirements = {
     ring_graph = {'center', 'radius', 'conky_value'},
     ellipse ={'center', 'radius', 'width','height'},
     ellipse_graph ={'center', 'radius', 'width','height','conky_value'},
-    variable_text = {},
-    static_text = {},
+    variable_text = {'from','conky_value'},
+    static_text = {'from','text'},
     clock = {},
 }
 
@@ -579,7 +592,12 @@ defaults = {
     },
     static_text = {
         color = 0x00FF6E,
-
+        rotation_angle=0,
+        font="Liberation Sans",
+        font_size=12,
+        bold=false,
+        italic=false,
+        alpha=1.0,
         draw_function = draw_static_text,
     },
     clock = {
