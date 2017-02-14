@@ -401,7 +401,25 @@ end
 
 
 function draw_variable_text(display, element)
-    error('variable_text element kind not implemented')
+  cairo_save(display)
+  cairo_move_to (display,element.from.x,element.from.y)
+  cairo_rotate(display,element.rotation_angle* (math.pi / 180))
+  cairo_set_source_rgba(display,hexa_to_rgb(element.color, element.alpha))
+  cairo_set_font_size (display, element.font_size)
+  local font_slant = CAIRO_FONT_SLANT_NORMAL
+  if element.italic then
+    font_slant=CAIRO_FONT_SLANT_ITALIC
+  end
+  local font_weight = CAIRO_FONT_WEIGHT_NORMAL
+  if element.bold then
+    font_weight=CAIRO_FONT_WEIGHT_BOLD
+  end
+  cairo_select_font_face(display,element.font,font_slant,font_weight)
+  local text = get_conky_value(element.conky_value,false)
+  cairo_show_text (display,text)
+
+  cairo_restore(display)
+  cairo_stroke (display)
 end
 
 
@@ -587,7 +605,12 @@ defaults = {
     },
     variable_text = {
         color = 0x00FF6E,
-
+        rotation_angle=0,
+        font="Liberation Sans",
+        font_size=12,
+        bold=false,
+        italic=false,
+        alpha=1.0,
         draw_function = draw_variable_text,
     },
     static_text = {
