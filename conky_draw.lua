@@ -39,7 +39,6 @@ function draw_line(display, element)
       cairo_set_line_width(display, element.thickness);
       cairo_move_to(display, element.from.x, element.from.y);
       cairo_rel_line_to(display, x_side, y_side);
-      --cairo_stroke(display);
     else
       -- draw graduated line
       cairo_set_source_rgba(display, hexa_to_rgb(element.color, element.alpha))
@@ -118,10 +117,11 @@ function draw_bar_graph(display, element)
         alpha = element['bar_alpha' .. alpha_critical_or_not_suffix],
         thickness = element['bar_thickness' .. thickness_critical_or_not_suffix],
     }
-    -- draw both lines
+    -- draw background lines
     draw_line(display, background_line)
 
   if element.graduated then
+      -- draw bar line if graduated
       cairo_set_source_rgba(display, hexa_to_rgb(bar_line.color, bar_line.alpha))
       cairo_set_line_width(display, bar_line.thickness);
       local from_x = bar_line.from.x
@@ -141,6 +141,7 @@ function draw_bar_graph(display, element)
 
     cairo_stroke(display)
   else
+    -- draw bar line if not graduated
     draw_line(display,bar_line);
   end
 
@@ -164,9 +165,11 @@ function draw_ring(display, element)
     cairo_set_line_width(display, element.thickness);
     -- draw the ring
     if not element.graduated then
+      -- draw the ring if not graduated
       arc_drawer(display, element.center.x, element.center.y, element.radius, start_angle, end_angle)
       cairo_stroke(display);
     else
+      -- draw the ring if graduated
       local angle_between_graduation = math.rad(element.angle_between_graduation)
       local graduation_size = math.abs(end_angle-start_angle)/element.number_graduation - angle_between_graduation
       local current_start = start_angle
@@ -233,11 +236,13 @@ function draw_ring_graph(display, element)
         thickness = element['bar_thickness' .. critical_or_not_suffix],
     }
 
-    -- draw both rings
+    -- draw background rings
     draw_ring(display, background_ring)
     if not element.graduated then
+      -- draw bar ring if not graduated
       draw_ring(display, bar_ring)
     else
+      -- draw bar ring if graduated
       local start_angle, end_angle = math.rad(element.start_angle), math.rad(element.end_angle)
       local arc_drawer = cairo_arc
       local orientation = 1
@@ -263,7 +268,7 @@ end
 
 
 function draw_ellipse_graph(display, element)
-    -- draw a ring graph
+    -- draw a ellipse graph
 
     -- get current value
     local value = get_conky_value(element.conky_value, true)
@@ -284,7 +289,7 @@ function draw_ellipse_graph(display, element)
         critical_or_not_suffix = '_critical'
     end
 
-    -- background ring (full graph)
+    -- background ellipse (full graph)
     background_ellipse = {
         center = element.center,
         radius = element.radius,
@@ -303,7 +308,7 @@ function draw_ellipse_graph(display, element)
         thickness = element['background_thickness' .. critical_or_not_suffix],
     }
 
-    -- bar ring
+    -- bar ellipse
     bar_ellipse = {
         center = element.center,
         radius = element.radius,
@@ -317,13 +322,15 @@ function draw_ellipse_graph(display, element)
         thickness = element['bar_thickness' .. critical_or_not_suffix],
     }
 
-    -- draw both rings
+    -- draw background ellipse
     draw_ellipse(display, background_ellipse)
 
 
     if not element.graduated then
+      -- draw ellipse bar if not graduated
       draw_ellipse(display, bar_ellipse)
     else
+      -- draw ellipse bar if graduated
       local start_angle, end_angle = math.rad(element.start_angle), math.rad(element.end_angle)
       local arc_drawer = cairo_arc
       local orientation = 1
@@ -356,12 +363,12 @@ end
 
 
 function draw_ellipse(display, element)
-    -- draw a ring
+    -- draw an ellipse
 
     -- the user types degrees, but we need radians
     local start_angle, end_angle = math.rad(element.start_angle), math.rad(element.end_angle)
     local rotation_angle = math.rad(element.rotation_angle)
-    -- direction of the ring changes the function we must call
+    -- direction of the ellipse changes the function we must call
       local arc_drawer = cairo_arc
     local orientation = 1
     if start_angle > end_angle then
@@ -372,8 +379,9 @@ function draw_ellipse(display, element)
     cairo_set_source_rgba(display,hexa_to_rgb(element.color, element.alpha))
     cairo_set_line_width(display, element.thickness)
 
-    -- draw the ring
+
     if not element.graduated then
+      -- draw simple ellipse
       cairo_save(display)
       cairo_translate (display, element.center.x + element.width / 2., element.center.y + element.height / 2.)
 
@@ -383,6 +391,7 @@ function draw_ellipse(display, element)
       cairo_restore(display)
       cairo_stroke(display)
     else
+      -- draw graduated ellipse
       local angle_between_graduation = math.rad(element.angle_between_graduation)
       local graduation_size = math.abs(end_angle-start_angle)/element.number_graduation - angle_between_graduation
       local current_start = start_angle
