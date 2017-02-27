@@ -56,9 +56,43 @@ Normal vs critical mode. You can even decide what changes when critical values a
         bar_thickness_critical = 13
     },
 
+.. image:: ./samples/graduated_line_graph.jpg
 
+Idem with graduation
+
+.. code:: lua
+
+    {
+        kind = 'bar_graph',
+        conky_value = 'fs_used_perc /home/',
+        from = {x = 50, y = 120},
+        to = {x = 120, y = 45},
+
+        background_thickness = 5,
+        background_color = 0x00E5FF,
+
+        bar_thickness = 5,
+        bar_color = 0x00E5FF,
+
+        critical_threshold = 60,
+
+        change_color_on_critical = true,
+        change_thickness_on_critical = true,
+
+        background_color_critical = 0xFFA0A0,
+        background_thickness_critical = 10,
+
+        bar_color_critical = 0xFF0000,
+        bar_thickness_critical = 13,
+
+	graduated= true,
+	number_graduation= 30,
+	space_between_graduation=2,
+    },
+
+    
 .. image:: ./samples/sample3.png
-
+	   
 
 Everybody loves ring graphs in conky.
 
@@ -71,7 +105,7 @@ Everybody loves ring graphs in conky.
         radius = 30,
     },
 
-
+    
 .. image:: ./samples/sample4.png
 
 
@@ -120,6 +154,40 @@ Or even ring fragments.
         end_angle = 300,
     },
 
+.. image:: ./samples/ellipse.png
+
+Simple and graduated ellipse_graph 
+
+.. code:: lua
+
+  {
+       kind = 'ellipse_graph',
+       center = {x = 10, y = 10},
+       conky_value = 'fs_used_perc /home/',
+       radius = 5,
+       width= 10,
+       height= 20,
+       graduated = true,
+       number_graduation=40,
+       angle_between_graduation=3,
+       start_angle = 0,
+       end_angle = 360,
+       color= 0xFF6600,
+       background_color= 0xD75600,
+   },
+
+   {
+       kind = 'ellipse_graph',
+       center = {x = 30, y = 10},
+       conky_value = 'fs_used_perc /home/',
+       radius = 5,
+       width= 10,
+       height= 20,
+       start_angle = 0,
+       end_angle = 360,
+       color= 0xFF6600,
+       background_color= 0xD75600,
+   },
 
 
 Right now you can define bar and ring graphs, and static lines and rings. Plans for the future:
