@@ -214,11 +214,11 @@ line:
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 | thickness                      | Thickness of the line.                                                                                                                 |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| graduated                      | specify if the element is  graduated.                                                                                                                 |
+| graduated                      | specify if the element is  graduated.                                                                                                  |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| number_graduation              | specify the number of  graduation.                                                                                                                |
+| number_graduation              | specify the number of  graduation.                                                                                                     |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| space_between_graduation       | specify the space between  graduation.                                                                                                                |
+| space_between_graduation       | specify the space between  graduation.                                                                                                 |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 
 
@@ -257,11 +257,11 @@ bar_graph:
 | bar_alpha_critical and         |                                                                                                                                        |
 | bar_thickness_critical         |                                                                                                                                        |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| graduated                      | specify if the element is  graduated.                                                                                                                 |
+| graduated                      | specify if the element is  graduated.                                                                                                  |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| number_graduation              | specify the number of  graduation.                                                                                                                |
+| number_graduation              | specify the number of  graduation.                                                                                                     |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| space_between_graduation       | specify the space between  graduation.                                                                                                                |
+| space_between_graduation       | specify the space between  graduation.                                                                                                 |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 
 ring:
@@ -289,11 +289,11 @@ ring:
 | * ``start_angle=90, end_angle=180``                                                                                                                                     |
 | * ``start_angle=180, end_angle=90``                                                                                                                                     |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| graduated                      | specify if the element is  graduated.                                                                                                                 |
+| graduated                      | specify if the element is  graduated.                                                                                                  |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| number_graduation              | specify the number of  graduation.                                                                                                                |
+| number_graduation              | specify the number of  graduation.                                                                                                     |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| angle_between_graduation       | specify the angle between  graduation.                                                                                                                |
+| angle_between_graduation       | specify the angle between  graduation.                                                                                                 |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 
 ring_graph:
@@ -340,11 +340,11 @@ ring_graph:
 | * ``start_angle=90, end_angle=180``                                                                                                                                     |
 | * ``start_angle=180, end_angle=90``                                                                                                                                     |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| graduated                      | specify if the element is  graduated.                                                                                                                 |
+| graduated                      | specify if the element is  graduated.                                                                                                  |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| number_graduation              | specify the number of  graduation.                                                                                                                |
+| number_graduation              | specify the number of  graduation.                                                                                                     |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| angle_between_graduation       | specify the angle between  graduation.                                                                                                                |
+| angle_between_graduation       | specify the angle between  graduation.                                                                                                 |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 
 
@@ -352,35 +352,35 @@ ellipse:
 -----
 
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| A simple ellipse (can be a section of the ring too).                                                                                                                       |
+| A simple ellipse (can be a section of the ring too).                                                                                                                    |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| center (required)              | The center point of the ellipse.                                                                                                          |
+| center (required)              | The center point of the ellipse.                                                                                                       |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| radius (required)              | The radius of the ellipse.                                                                                                                |
+| radius (required)              | The radius of the ellipse.                                                                                                             |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| width (required)               | Define the rectangle which give the ellipse form                                                 |
+| width (required)               | Define the rectangle which give the ellipse forme                                                                                      |
 | height (required)              |                                                                                                                                        |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| color                          | Color of the ellipse.                                                                                                                     |
+| color                          | Color of the ellipse.                                                                                                                  |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| alpha                          | Transpacency level of the ellipse.                                                                                                        |
+| alpha                          | Transpacency level of the ellipse.                                                                                                     |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| thickness                      | Thickness of the ellipse.                                                                                                                 |
+| thickness                      | Thickness of the ellipse.                                                                                                              |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| start_angle                    | Angle at which the arc starts. Useful to limit the ellipse to just a section of the ellipse.                                               |
+| start_angle                    | Angle at which the arc starts. Useful to limit the ellipse to just a section of the ellipse.                                           |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| end_angle                      | Angle at which the arc ends. Useful to limit the ellipse to just a section of the ellipse.                                                 |
+| end_angle                      | Angle at which the arc ends. Useful to limit the ellipse to just a section of the ellipse.                                             |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 | *Extra tip*: start_angle and end_angle can be swapped, to produce oposite arcs. If you don't understand this, just try what happens with this two examples:             |
 |                                                                                                                                                                         |
 | * ``start_angle=90, end_angle=180``                                                                                                                                     |
 | * ``start_angle=180, end_angle=90``                                                                                                                                     |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| graduated                      | specify if the element is  graduated.                                                                                                                 |
+| graduated                      | specify if the element is  graduated.                                                                                                  |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| number_graduation              | specify the number of  graduation.                                                                                                                |
+| number_graduation              | specify the number of  graduation.                                                                                                     |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| angle_between_graduation       | specify the angle between  graduation.                                                                                                                |
+| angle_between_graduation       | specify the angle between  graduation.                                                                                                 |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 
 
@@ -388,16 +388,16 @@ ellipse_graph:
 -----------
 
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| A ellipse graph (can be a section of the ring too) able to display a value from conky, and optionaly able to change appearance when the value hits a "critical" threshold. |
-| It's composed of two ellipse, one for the background, and the other to represent the current value of the conky stat.                                                     |
+| A ellipse graph (can be a section of the ring too) able to display a value from conky, and optionaly able to change appearance when the value hits a "critical"         |
+| threshold. It's composed of two ellipse, one for the background, and the other to represent the current value of the conky stat.                                        |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| center (required)              | The center point of the ellipse.                                                                                                          |
+| center (required)              | The center point of the ellipse.                                                                                                       |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| radius (required)              | The radius of the ellipse.                                                                                                                |
+| radius (required)              | The radius of the ellipse.                                                                                                             |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 | conky_value (required)         | Conky value to use on the graph.                                                                                                       |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| width (required)               | Define the rectangle which give the ellipse form                                                 |
+| width (required)               | Define the rectangle which give the ellipse forme                                                                                      |
 | height (required)              |                                                                                                                                        |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 | max_value and                  | For the conky value being used on the graph.                                                                                           |
@@ -422,20 +422,20 @@ ellipse_graph:
 | bar_alpha_critical and         |                                                                                                                                        |
 | bar_thickness_critical         |                                                                                                                                        |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| start_angle                    | Angle at which the arc starts. Useful to limit the ellipse to just a section of the ellipse.                                               |
+| start_angle                    | Angle at which the arc starts. Useful to limit the ellipse to just a section of the ellipse.                                           |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| end_angle                      | Angle at which the arc ends. Useful to limit the ellipse to just a section of the ellipse.                                                 |
+| end_angle                      | Angle at which the arc ends. Useful to limit the ellipse to just a section of the ellipse.                                             |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 | *Extra tip*: start_angle and end_angle can be swapped, to produce oposite arcs. If you don't understand this, just try what happens with this two examples:             |
 |                                                                                                                                                                         |
 | * ``start_angle=90, end_angle=180``                                                                                                                                     |
 | * ``start_angle=180, end_angle=90``                                                                                                                                     |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| graduated                      | specify if the element is  graduated.                                                                                                                 |
+| graduated                      | specify if the element is  graduated.                                                                                                  |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| number_graduation              | specify the number of  graduation.                                                                                                                |
+| number_graduation              | specify the number of  graduation.                                                                                                     |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-| angle_between_graduation       | specify the angle between  graduation.                                                                                                                |
+| angle_between_graduation       | specify the angle between  graduation.                                                                                                 |
 +--------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
 
 
