@@ -105,9 +105,27 @@ Everybody loves ring graphs in conky.
         radius = 30,
     },
 
+.. image:: ./samples/graduated_ring.png
+    
+Ring with graduation
+
+.. code:: lua
+
+  {
+       kind = 'ring_graph',
+       center = {x = 50, y = 50},
+       conky_value = 'fs_used_perc /home/',
+       radius = 30,
+       graduated = true,
+       number_graduation=40,
+       angle_between_graduation=3,
+       start_angle = 0,
+       end_angle = 360,
+       color= 0xFF6600,
+       background_color= 0xD75600,
+   },
     
 .. image:: ./samples/sample4.png
-
 
 Lord of the customized rings.
 
