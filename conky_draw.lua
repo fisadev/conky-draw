@@ -257,10 +257,11 @@ function draw_ring_graph(display, element)
       local graduation_size = math.abs(end_angle-start_angle)/element.number_graduation - angle_between_graduation
       local current_start = start_angle
       bar_degrees=math.rad(bar_degrees)
-      for i=1, bar_degrees/(graduation_size+angle_between_graduation) do
+      for i=1, bar_degrees/(graduation_size+angle_between_graduation)*orientation do
         arc_drawer(display, element.center.x, element.center.y, element.radius, current_start, current_start+graduation_size* orientation)
         current_start= current_start+ (graduation_size+angle_between_graduation)* orientation
         cairo_stroke(display);
+
       end
     end
 
@@ -345,7 +346,7 @@ function draw_ellipse_graph(display, element)
       local graduation_size = math.abs(end_angle-start_angle)/element.number_graduation - angle_between_graduation
       local current_start = start_angle
       bar_degrees=math.rad(bar_degrees)
-      for i=1, bar_degrees/(graduation_size+angle_between_graduation) do
+      for i=1, bar_degrees/(graduation_size+angle_between_graduation)*orientation do
         cairo_save(display)
         cairo_translate (display, element.center.x + element.width / 2., element.center.y + element.height / 2.)
 
