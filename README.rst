@@ -5,6 +5,8 @@ Easily create beautiful conky graphs and drawings.
 
 The main idea is this: stop copying and pasting random code from the web to your monolithic conkyrc + something.lua. Start using a nicely defined set of visual elements, in a very clean config file, separated from the code that has the drawing logic. "You ask, conky_draw draws".
 
+Also, Daguhh made a GUI to generate the configs! https://github.com/Daguhh/ConkyLuaMakerGUIv2
+
 Examples
 --------
 
