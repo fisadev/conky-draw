@@ -1,4 +1,5 @@
 require 'cairo'
+package.path = package.path .. ';' .. os.getenv("HOME") .. '/.conky/conky-draw/?.lua'
 require 'conky_draw_config'
 
 
