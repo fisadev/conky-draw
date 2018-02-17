@@ -740,7 +740,7 @@ function conky_main()
     local display = cairo_create(surface)
 
     if tonumber(conky_parse('${updates}')) > 3 then
-        for i, element in pairs(elements) do
+        for i, element in ipairs(elements) do
             element.draw_function(display, element)
         end
     end
