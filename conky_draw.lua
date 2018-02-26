@@ -384,10 +384,9 @@ function draw_ellipse(display, element)
     if not element.graduated then
       -- draw simple ellipse
       cairo_save(display)
-      cairo_translate (display, element.center.x + element.width / 2., element.center.y + element.height / 2.)
-
+      cairo_translate (display, element.center.x, element.center.y)
       cairo_scale (display, element.width / 2., element.height / 2.)
-      arc_drawer(display, element.center.x, element.center.y, element.radius, start_angle, end_angle)
+      arc_drawer(display, 0., 0., 1., start_angle, end_angle)
 
       cairo_restore(display)
       cairo_stroke(display)
@@ -399,9 +398,9 @@ function draw_ellipse(display, element)
 
       for i=1, element.number_graduation do
         cairo_save(display)
-        cairo_translate (display, element.center.x + element.width / 2., element.center.y + element.height / 2.)
+        cairo_translate (display, element.center.x, element.center.y)
         cairo_scale (display, element.width / 2., element.height / 2.)
-        arc_drawer(display, element.center.x, element.center.y, element.radius, current_start, current_start+graduation_size* orientation)
+        arc_drawer(display, 0., 0., 1., current_start, current_start+graduation_size* orientation)
         current_start= current_start+ (graduation_size+angle_between_graduation)* orientation
         cairo_restore(display)
         cairo_stroke(display);
@@ -468,8 +467,8 @@ requirements = {
     bar_graph = {'from', 'to', 'conky_value'},
     ring = {'center', 'radius'},
     ring_graph = {'center', 'radius', 'conky_value'},
-    ellipse ={'center', 'radius', 'width','height'},
-    ellipse_graph ={'center', 'radius', 'width','height','conky_value'},
+    ellipse ={'center', 'width','height'},
+    ellipse_graph ={'center', 'width','height','conky_value'},
     variable_text = {'from','conky_value'},
     static_text = {'from','text'},
     clock = {},
