@@ -23,6 +23,26 @@ function get_conky_value(conky_value, is_number)
     return value
 end
 
+function get_critical_or_not_suffix (value, threshold, change_color_on_critical, change_alpha_on_critical, change_thickness_on_critical)
+  local result = {
+    color = '',
+    alpha = '',
+    thickness = ''
+  }
+  if value >= threshold then
+    if change_color_on_critical then
+      result.color = '_critical'
+    end
+    if change_alpha_on_critical then
+      result.alpha = '_critical'
+    end
+    if change_thickness_on_critical then
+      result.thickness = '_critical'
+    end
+  end
+  return result
+end
+
 
 function draw_line(display, element)
     -- draw a line
@@ -40,6 +60,10 @@ function draw_line(display, element)
       cairo_move_to(display, element.from.x, element.from.y);
       cairo_rel_line_to(display, x_side, y_side);
     else
+      if element.number_graduation == 0 or element.space_between_graduation == 0 then
+        error ("The values of number_graduation and space_between_graduation must be non-zero as they are used as divisors. Dividing by zero causes undefined behavior (usually it results in an 'inf').")
+      end
+
       -- draw graduated line
       cairo_set_source_rgba(display, hexa_to_rgb(element.color, element.alpha))
       cairo_set_line_width(display, element.thickness);
@@ -48,23 +72,25 @@ function draw_line(display, element)
       local space_x = x_side/element.number_graduation-space_graduation_x
       local space_y = y_side/element.number_graduation-space_graduation_y
 
-      for i=1,element.number_graduation do
-          cairo_move_to(display,from_x,from_y)
-          from_x=from_x+space_x+space_graduation_x
-          from_y=from_y+space_y+space_graduation_y
-          cairo_rel_line_to(display,space_x,space_y)
+      if math.floor (element.number_graduation) > 0 then
+        for i=1,element.number_graduation do
+            cairo_move_to(display,from_x,from_y)
+            from_x=from_x+space_x+space_graduation_x
+            from_y=from_y+space_y+space_graduation_y
+            cairo_rel_line_to(display,space_x,space_y)
+        end
       end
     end
     cairo_stroke(display)
 end
 
-
 function draw_bar_graph(display, element)
     -- draw a bar graph
-    -- Used a little bit of trigonometry to be able to draw bars in any direction! :)
+    if element.max_value == 0 then
+      error ("The value of max_value must be non-zero as it is used a divisor. Dividing by zero causes undefined behavior (usually it results in an 'inf').")
+    end
 
     -- get current value
-
     value = get_conky_value(element.conky_value, true)
     if value > element.max_value   then
         value = element.max_value
@@ -73,54 +99,40 @@ function draw_bar_graph(display, element)
     -- dimensions of the full graph
     local x_side = element.to.x - element.from.x
     local y_side = element.to.y - element.from.y
-    local hypotenuse = math.sqrt(math.pow(x_side, 2) + math.pow(y_side, 2))
-    local angle = math.atan2(y_side, x_side)
-
-    -- dimensions of the value bar
-    local bar_hypotenuse = value * (hypotenuse / element.max_value)
-    local bar_x_side = bar_hypotenuse * math.cos(angle)
-    local bar_y_side = bar_hypotenuse * math.sin(angle)
+    local bar_x_side = x_side*value/element.max_value
+    local bar_y_side = y_side*value/element.max_value
 
     -- is it in critical value?
-    local color_critical_or_not_suffix = ''
-    local alpha_critical_or_not_suffix = ''
-    local thickness_critical_or_not_suffix = ''
-    if value >= element.critical_threshold then
-        if element.change_color_on_critical then
-            color_critical_or_not_suffix = '_critical'
-        end
-        if element.change_alpha_on_critical then
-            alpha_critical_or_not_suffix = '_critical'
-        end
-        if element.change_thickness_on_critical then
-            thickness_critical_or_not_suffix = '_critical'
-        end
-    end
+    local critical_or_not_suffix = get_critical_or_not_suffix (value, element.critical_threshold, element.change_color_on_critical, element.change_alpha_on_critical, element.change_thickness_on_critical)
 
     -- background line (full graph)
     background_line = {
         from = element.from,
         to = element.to,
 
-        color = element['background_color' .. color_critical_or_not_suffix],
-        alpha = element['background_alpha' .. alpha_critical_or_not_suffix],
-        thickness = element['background_thickness' .. thickness_critical_or_not_suffix],
+        color = element['background_color' .. critical_or_not_suffix.color],
+        alpha = element['background_alpha' .. critical_or_not_suffix.alpha],
+        thickness = element['background_thickness' .. critical_or_not_suffix.thickness],
         graduated = element.graduated,
         number_graduation=element.number_graduation,
         space_between_graduation=element.space_between_graduation,
     }
     bar_line = {
         from = element.from,
-        to = {x=element.from.x + bar_x_side, y=element.from.y + bar_y_side},
+        to = {x=element.from.x + math.floor(bar_x_side), y=element.from.y + math.floor(bar_y_side)},
 
-        color = element['bar_color' .. color_critical_or_not_suffix],
-        alpha = element['bar_alpha' .. alpha_critical_or_not_suffix],
-        thickness = element['bar_thickness' .. thickness_critical_or_not_suffix],
+        color = element['bar_color' .. critical_or_not_suffix.color],
+        alpha = element['bar_alpha' .. critical_or_not_suffix.alpha],
+        thickness = element['bar_thickness' .. critical_or_not_suffix.thickness],
     }
     -- draw background lines
     draw_line(display, background_line)
 
   if element.graduated then
+    if element.space_between_graduation == 0 or element.number_graduation == 0 then
+      error ("The values of number_graduation and space_between_graduation must be non-zero as they are used as divisors. Dividing by zero causes undefined behavior (usually it results in an 'inf').")
+    end
+
       -- draw bar line if graduated
       cairo_set_source_rgba(display, hexa_to_rgb(bar_line.color, bar_line.alpha))
       cairo_set_line_width(display, bar_line.thickness);
@@ -131,12 +143,15 @@ function draw_bar_graph(display, element)
       local space_x = x_side/element.number_graduation-space_graduation_x
       local space_y = y_side/element.number_graduation-space_graduation_y
 
-      for i=1,bar_x_side/(space_x+space_graduation_x) do
+      local number_of_bars_to_fill = math.floor(value / element.max_value * element.number_graduation)
 
+      if math.floor (number_of_bars_to_fill) > 0 then
+        for i=1,number_of_bars_to_fill do
           cairo_move_to(display,from_x,from_y)
           from_x=from_x+space_x+space_graduation_x
           from_y=from_y+space_y+space_graduation_y
           cairo_rel_line_to(display,space_x,space_y)
+        end
       end
 
     cairo_stroke(display)
@@ -170,14 +185,19 @@ function draw_ring(display, element)
       cairo_stroke(display);
     else
       -- draw the ring if graduated
+      if element.number_graduation == 0 then
+        error ("The value of number_graduation must be non-zero as it is used as a divisor. Dividing by zero causes undefined behavior (usually it results in an 'inf').")
+      end
       local angle_between_graduation = math.rad(element.angle_between_graduation)
       local graduation_size = math.abs(end_angle-start_angle)/element.number_graduation - angle_between_graduation
       local current_start = start_angle
 
-      for i=1, element.number_graduation do
-        arc_drawer(display, element.center.x, element.center.y, element.radius, current_start, current_start+graduation_size* orientation)
-        current_start= current_start+ (graduation_size+angle_between_graduation)* orientation
-        cairo_stroke(display);
+      if math.floor(element.number_graduation) > 0 then
+        for i=1, element.number_graduation do
+          arc_drawer(display, element.center.x, element.center.y, element.radius, current_start, current_start+graduation_size* orientation)
+          current_start= current_start+ (graduation_size+angle_between_graduation)* orientation
+          cairo_stroke(display);
+        end
       end
     end
 
@@ -186,6 +206,9 @@ end
 
 function draw_ring_graph(display, element)
     -- draw a ring graph
+    if element.max_value == 0 then
+      error ("The value of max_value must be non-zero as it is used a divisor. Dividing by zero causes undefined behavior (usually it results in an 'inf').")
+    end
 
     -- get current value
     local value = get_conky_value(element.conky_value, true)
@@ -201,10 +224,7 @@ function draw_ring_graph(display, element)
     local bar_degrees = value * (degrees / element.max_value)
 
     -- is it in critical value?
-    local critical_or_not_suffix = ''
-    if value >= element.critical_threshold then
-        critical_or_not_suffix = '_critical'
-    end
+    local critical_or_not_suffix = get_critical_or_not_suffix (value, element.critical_threshold, element.change_color_on_critical, element.change_alpha_on_critical, element.change_thickness_on_critical)
 
     -- background ring (full graph)
     background_ring = {
@@ -218,9 +238,9 @@ function draw_ring_graph(display, element)
         number_graduation= element.number_graduation,
         angle_between_graduation =element.angle_between_graduation,
 
-        color = element['background_color' .. critical_or_not_suffix],
-        alpha = element['background_alpha' .. critical_or_not_suffix],
-        thickness = element['background_thickness' .. critical_or_not_suffix],
+        color = element['background_color' .. critical_or_not_suffix.color],
+        alpha = element['background_alpha' .. critical_or_not_suffix.alpha],
+        thickness = element['background_thickness' .. critical_or_not_suffix.thickness],
     }
 
     -- bar ring
@@ -231,9 +251,9 @@ function draw_ring_graph(display, element)
         start_angle = element.start_angle,
         end_angle = element.start_angle + bar_degrees,
 
-        color = element['bar_color' .. critical_or_not_suffix],
-        alpha = element['bar_alpha' .. critical_or_not_suffix],
-        thickness = element['bar_thickness' .. critical_or_not_suffix],
+        color = element['bar_color' .. critical_or_not_suffix.color],
+        alpha = element['bar_alpha' .. critical_or_not_suffix.alpha],
+        thickness = element['bar_thickness' .. critical_or_not_suffix.thickness],
     }
 
     -- draw background rings
@@ -257,11 +277,16 @@ function draw_ring_graph(display, element)
       local graduation_size = math.abs(end_angle-start_angle)/element.number_graduation - angle_between_graduation
       local current_start = start_angle
       bar_degrees=math.rad(bar_degrees)
-      for i=1, bar_degrees/(graduation_size+angle_between_graduation)*orientation do
-        arc_drawer(display, element.center.x, element.center.y, element.radius, current_start, current_start+graduation_size* orientation)
-        current_start= current_start+ (graduation_size+angle_between_graduation)* orientation
-        cairo_stroke(display);
 
+      if (graduation_size+angle_between_graduation)*orientation == 0 then
+        error ("A division by zero would lead to an infinitely running for loop.")
+      end
+      if math.floor(bar_degrees/(graduation_size+angle_between_graduation)*orientation) > 0 then
+        for i=1, bar_degrees/(graduation_size+angle_between_graduation)*orientation do
+          arc_drawer(display, element.center.x, element.center.y, element.radius, current_start, current_start+graduation_size* orientation)
+          current_start= current_start+ (graduation_size+angle_between_graduation)* orientation
+          cairo_stroke(display);
+        end
       end
     end
 
@@ -270,6 +295,9 @@ end
 
 function draw_ellipse_graph(display, element)
     -- draw a ellipse graph
+    if element.max_value == 0 then
+      error ("The value of max_value must be non-zero as it is used a divisor. Dividing by zero causes undefined behavior (usually it results in an 'inf').")
+    end
 
     -- get current value
     local value = get_conky_value(element.conky_value, true)
@@ -285,10 +313,7 @@ function draw_ellipse_graph(display, element)
     local bar_degrees = value * (degrees / element.max_value)
 
     -- is it in critical value?
-    local critical_or_not_suffix = ''
-    if value >= element.critical_threshold then
-        critical_or_not_suffix = '_critical'
-    end
+    local critical_or_not_suffix = get_critical_or_not_suffix (value, element.critical_threshold, element.change_color_on_critical, element.change_alpha_on_critical, element.change_thickness_on_critical)
 
     -- background ellipse (full graph)
     background_ellipse = {
@@ -304,9 +329,9 @@ function draw_ellipse_graph(display, element)
         number_graduation= element.number_graduation,
         angle_between_graduation =element.angle_between_graduation,
 
-        color = element['background_color' .. critical_or_not_suffix],
-        alpha = element['background_alpha' .. critical_or_not_suffix],
-        thickness = element['background_thickness' .. critical_or_not_suffix],
+        color = element['background_color' .. critical_or_not_suffix.color],
+        alpha = element['background_alpha' .. critical_or_not_suffix.alpha],
+        thickness = element['background_thickness' .. critical_or_not_suffix.thickness],
     }
 
     -- bar ellipse
@@ -318,9 +343,9 @@ function draw_ellipse_graph(display, element)
         start_angle = element.start_angle,
         end_angle = element.start_angle + bar_degrees,
         rotation_angle= element.rotation_angle,
-        color = element['bar_color' .. critical_or_not_suffix],
-        alpha = element['bar_alpha' .. critical_or_not_suffix],
-        thickness = element['bar_thickness' .. critical_or_not_suffix],
+        color = element['bar_color' .. critical_or_not_suffix.color],
+        alpha = element['bar_alpha' .. critical_or_not_suffix.alpha],
+        thickness = element['bar_thickness' .. critical_or_not_suffix.thickness],
     }
 
     -- draw background ellipse
@@ -332,6 +357,10 @@ function draw_ellipse_graph(display, element)
       draw_ellipse(display, bar_ellipse)
     else
       -- draw ellipse bar if graduated
+      if element.number_graduation == 0 then
+        error ("The value of number_graduation must be non-zero as it is used as a divisor. Dividing by zero causes undefined behavior (usually it results in an 'inf').")
+      end
+
       local start_angle, end_angle = math.rad(element.start_angle), math.rad(element.end_angle)
       local arc_drawer = cairo_arc
       local orientation = 1
@@ -346,20 +375,25 @@ function draw_ellipse_graph(display, element)
       local graduation_size = math.abs(end_angle-start_angle)/element.number_graduation - angle_between_graduation
       local current_start = start_angle
       bar_degrees=math.rad(bar_degrees)
-      for i=1, bar_degrees/(graduation_size+angle_between_graduation)*orientation do
-        cairo_save(display)
-        cairo_translate (display, element.center.x + element.width / 2., element.center.y + element.height / 2.)
 
-        cairo_scale (display, element.width / 2., element.height / 2.)
-        arc_drawer(display, element.center.x, element.center.y, element.radius, current_start, current_start+graduation_size* orientation)
-        current_start= current_start+ (graduation_size+angle_between_graduation)* orientation
+      if (graduation_size+angle_between_graduation)*orientation == 0 then
+        error ("A division by zero would lead to an infinitely running for loop.")
+      end
 
-        cairo_restore(display)
-        cairo_stroke(display);
+      if math.floor(bar_degrees/(graduation_size+angle_between_graduation)*orientation) > 0 then
+        for i=1, bar_degrees/(graduation_size+angle_between_graduation)*orientation do
+          cairo_save(display)
+          cairo_translate (display, element.center.x + element.width / 2., element.center.y + element.height / 2.)
+
+          cairo_scale (display, element.width / 2., element.height / 2.)
+          arc_drawer(display, element.center.x, element.center.y, element.radius, current_start, current_start+graduation_size* orientation)
+          current_start= current_start+ (graduation_size+angle_between_graduation)* orientation
+
+          cairo_restore(display)
+          cairo_stroke(display);
+        end
       end
     end
-
-
 end
 
 
@@ -393,18 +427,23 @@ function draw_ellipse(display, element)
       cairo_stroke(display)
     else
       -- draw graduated ellipse
+      if element.number_graduation == 0 then
+        error ("The value of number_graduation must be non-zero as it is used as a divisor. Dividing by zero causes undefined behavior (usually it results in an 'inf').")
+      end
       local angle_between_graduation = math.rad(element.angle_between_graduation)
       local graduation_size = math.abs(end_angle-start_angle)/element.number_graduation - angle_between_graduation
       local current_start = start_angle
 
-      for i=1, element.number_graduation do
-        cairo_save(display)
-        cairo_translate (display, element.center.x + element.width / 2., element.center.y + element.height / 2.)
-        cairo_scale (display, element.width / 2., element.height / 2.)
-        arc_drawer(display, element.center.x, element.center.y, element.radius, current_start, current_start+graduation_size* orientation)
-        current_start= current_start+ (graduation_size+angle_between_graduation)* orientation
-        cairo_restore(display)
-        cairo_stroke(display);
+      if math.floor(element.number_graduation) > 0 then
+        for i=1, element.number_graduation do
+          cairo_save(display)
+          cairo_translate (display, element.center.x + element.width / 2., element.center.y + element.height / 2.)
+          cairo_scale (display, element.width / 2., element.height / 2.)
+          arc_drawer(display, element.center.x, element.center.y, element.radius, current_start, current_start+graduation_size* orientation)
+          current_start= current_start+ (graduation_size+angle_between_graduation)* orientation
+          cairo_restore(display)
+          cairo_stroke(display);
+        end
       end
     end
 end
