@@ -1,4 +1,5 @@
 require 'cairo'
+package.path = package.path .. ';' .. os.getenv("HOME") .. '/.conky/conky-draw/?.lua'
 require 'conky_draw_config'
 
 
@@ -23,6 +24,35 @@ function get_conky_value(conky_value, is_number)
     return value
 end
 
+function draw_background(display, element)
+    -- draw a window background
+
+    local width = conky_window.width
+    local height = conky_window.height
+
+    cairo_move_to(display, element.radius, 0)
+    cairo_line_to(display, width - element.radius, 0)
+    cairo_curve_to(display, width, 0, width, 0, width, element.radius)
+    cairo_line_to(display, width, height - element.radius)
+    cairo_curve_to(display, width, height, width, height, width - element.radius, height)
+    cairo_line_to(display, element.radius, height)
+    cairo_curve_to(display, 0, height, 0, height, 0, height - element.radius)
+    cairo_line_to(display, 0, element.radius)
+    cairo_curve_to(display, 0, 0, 0, 0, element.radius, 0)
+    cairo_close_path(display)
+
+    cairo_set_source_rgba(display, hexa_to_rgb(element.color, element.alpha))
+
+    if element.outline_thickness > 0 then
+      cairo_fill_preserve(display)
+      cairo_set_source_rgba(display, hexa_to_rgb(element.outline_color, element.outline_alpha))
+      cairo_set_line_width(display, element.outline_thickness)
+      cairo_stroke(display)
+    else
+      -- fill the background
+      cairo_fill(display)
+    end
+end
 
 function draw_line(display, element)
     -- draw a line
@@ -30,7 +60,7 @@ function draw_line(display, element)
     -- deltas for x and y (cairo expects a point and deltas for both axis)
     local x_side = element.to.x - element.from.x -- not abs! because they are deltas
     local y_side = element.to.y - element.from.y -- and the same here
-    local from_x =element.from.x
+    local from_x = element.from.x
     local from_y = element.from.y
 
     if not element.graduated then
@@ -465,6 +495,7 @@ end
 -- values
 requirements = {
     line = {'from', 'to'},
+    background = {},
     bar_graph = {'from', 'to', 'conky_value'},
     ring = {'center', 'radius'},
     ring_graph = {'center', 'radius', 'conky_value'},
@@ -478,6 +509,17 @@ requirements = {
 
 -- Default values for properties that can have a default value
 defaults = {
+    background = {
+        radius = 30,
+        color = 0x000000,
+        alpha = 0.5,
+
+        outline_color = 0x00FF6E,
+        outline_alpha = 0.5,
+        outline_thickness = 2,
+
+        draw_function = draw_background,
+    },
     bar_graph = {
         max_value = 100.,
         critical_threshold = 90.,
@@ -698,7 +740,7 @@ function conky_main()
     local display = cairo_create(surface)
 
     if tonumber(conky_parse('${updates}')) > 3 then
-        for i, element in pairs(elements) do
+        for i, element in ipairs(elements) do
             element.draw_function(display, element)
         end
     end
