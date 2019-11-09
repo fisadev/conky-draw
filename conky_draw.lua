@@ -220,7 +220,7 @@ function draw_ring(display, element)
         local angle_between_graduation = math.rad(element.angle_between_graduation)
         local graduation_size = math.abs(end_angle-start_angle)/element.number_graduation - angle_between_graduation
         local current_start = start_angle
-        
+
         if math.floor(element.number_graduation) > 0 then
             for i=1, element.number_graduation do
                 arc_drawer(display, element.center.x, element.center.y, element.radius, current_start, current_start+graduation_size* orientation)
@@ -300,12 +300,12 @@ function draw_ring_graph(display, element)
         end
         cairo_set_source_rgba(display, hexa_to_rgb(bar_ring.color, bar_ring.alpha))
         cairo_set_line_width(display, bar_ring.thickness);
-        
+
         local angle_between_graduation = math.rad(element.angle_between_graduation)
         local graduation_size = math.abs(end_angle-start_angle)/element.number_graduation - angle_between_graduation
         local current_start = start_angle
         bar_degrees=math.rad(bar_degrees)
-        
+
         if (graduation_size+angle_between_graduation)*orientation == 0 then
             error ("A division by zero would lead to an infinitely running for loop.")
         end
@@ -388,7 +388,7 @@ function draw_ellipse_graph(display, element)
         if element.number_graduation == 0 then
             error ("The value of number_graduation must be non-zero as it is used as a divisor. Dividing by zero causes undefined behavior (usually it results in an 'inf').")
         end
-        
+
         local start_angle, end_angle = math.rad(element.start_angle), math.rad(element.end_angle)
         local arc_drawer = cairo_arc
         local orientation = 1
@@ -398,25 +398,25 @@ function draw_ellipse_graph(display, element)
         end
         cairo_set_source_rgba(display, hexa_to_rgb(bar_ellipse.color, bar_ellipse.alpha))
         cairo_set_line_width(display, bar_ellipse.thickness);
-        
+
         local angle_between_graduation = math.rad(element.angle_between_graduation)
         local graduation_size = math.abs(end_angle-start_angle)/element.number_graduation - angle_between_graduation
         local current_start = start_angle
         bar_degrees=math.rad(bar_degrees)
-        
+
         if (graduation_size+angle_between_graduation)*orientation == 0 then
             error ("A division by zero would lead to an infinitely running for loop.")
         end
-        
+
         if math.floor(bar_degrees/(graduation_size+angle_between_graduation)*orientation) > 0 then
             for i=1, bar_degrees/(graduation_size+angle_between_graduation)*orientation do
                 cairo_save(display)
                 cairo_translate (display, element.center.x + element.width / 2., element.center.y + element.height / 2.)
-        
+
                 cairo_scale (display, element.width / 2., element.height / 2.)
                 arc_drawer(display, element.center.x, element.center.y, element.radius, current_start, current_start+graduation_size* orientation)
                 current_start= current_start+ (graduation_size+angle_between_graduation)* orientation
-        
+
                 cairo_restore(display)
                 cairo_stroke(display);
             end
@@ -449,7 +449,7 @@ function draw_ellipse(display, element)
         cairo_translate (display, element.center.x, element.center.y)
         cairo_scale (display, element.width / 2., element.height / 2.)
         arc_drawer(display, 0., 0., 1., start_angle, end_angle)
-        
+
         cairo_restore(display)
         cairo_stroke(display)
     else
@@ -460,7 +460,7 @@ function draw_ellipse(display, element)
         local angle_between_graduation = math.rad(element.angle_between_graduation)
         local graduation_size = math.abs(end_angle-start_angle)/element.number_graduation - angle_between_graduation
         local current_start = start_angle
-        
+
         if math.floor(element.number_graduation) > 0 then
             for i=1, element.number_graduation do
                 cairo_save(display)
@@ -490,9 +490,9 @@ function draw_variable_text(display, element)
     end
     cairo_select_font_face(display,element.font,font_slant,font_weight)
     local text = get_conky_value(element.conky_value,false)
-    
+
     local extents=cairo_text_extents_t:create()
-    cairo_text_extents(display, text, extents) 
+    cairo_text_extents(display, text, extents)
     local x = element.from.x
     if element.halign == "center" then
         x = x - (extents.width / 2 + extents.x_bearing)
@@ -505,12 +505,12 @@ function draw_variable_text(display, element)
     elseif element.valign == "top" then
         y = y + extents.height
     end
-    
+
     cairo_move_to (display,x,y)
     cairo_rotate(display,element.rotation_angle* (math.pi / 180))
-    
+
     cairo_show_text (display,text)
-    
+
     cairo_restore(display)
     cairo_stroke (display)
 end
@@ -529,9 +529,9 @@ function draw_static_text(display, element)
         font_weight=CAIRO_FONT_WEIGHT_BOLD
     end
     cairo_select_font_face(display,element.font,font_slant,font_weight)
-    
+
     local extents=cairo_text_extents_t:create()
-    cairo_text_extents(display, element.text, extents) 
+    cairo_text_extents(display, element.text, extents)
     local x = element.from.x
     if element.halign == "center" then
         x = x - (extents.width / 2 + extents.x_bearing)
@@ -547,9 +547,9 @@ function draw_static_text(display, element)
 
     cairo_move_to (display,x,y)
     cairo_rotate(display,element.rotation_angle* (math.pi / 180))
-    
+
     cairo_show_text (display,element.text)
-    
+
     cairo_restore(display)
     cairo_stroke (display)
 end
