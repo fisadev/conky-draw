@@ -516,7 +516,7 @@ function draw_static_text(display, element)
         font_weight=CAIRO_FONT_WEIGHT_BOLD
       end
       cairo_select_font_face(display,element.font,font_slant,font_weight)
-
+      local text = element.text
       cairo_show_text (display,element.text)
 
       cairo_restore(display)
